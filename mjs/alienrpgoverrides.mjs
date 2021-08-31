@@ -1150,6 +1150,12 @@ const RE = {
     set F(v) { game.alienrpgoverrides = v }
 };
 
+/*
+    Update Command with the missing [6].
+    Update the talents that let people push twice with a warning about clicking the multi-push box.
+
+*/
+
 // Register Hooks from imported scripts
 [
     viewMasterHooks,
