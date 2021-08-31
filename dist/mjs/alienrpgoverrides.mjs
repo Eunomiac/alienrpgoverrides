@@ -1,16 +1,12 @@
-// #region ▒░▒░▒░▒[IMPORTS] Importing Modules ▒░▒░▒░▒ ~
-// #region ░░░░░░░[GMPREP]░░░░ Setup & Design Functions for Scenario Creation ░░░░░░░ ~
-import {setSceneFromSVG} from "./setSceneFromSVG.mjs";
-// #endregion ░░░░[GMPREP]░░░░
-// #region ░░░░░░░[UTILITIES]░░░░ Utility Functions ░░░░░░░ ~
-import {preloadHandlebarsTemplates} from "./loadTemplates.mjs";
-// #endregion ░░░░[UTILITIES]░░░░
-// #region ░░░░░░░[HOOKS]░░░░ Event-Based Architecture of Companion Scripts ░░░░░░░ ~
+// ▒░▒░▒░▒[IMPORTS] Importing Modules ▒░▒░▒░▒
+// ░░░░░░░[GMPREP]░░░░ Setup & Design Functions for Scenario Creation ░░░░░░░
+import {setSceneFromSVG} from "./setSceneFromSVG.mjs";
+// ░░░░░░░[UTILITIES]░░░░ Utility Functions ░░░░░░░
+import {preloadHandlebarsTemplates} from "./loadTemplates.mjs";
+// ░░░░░░░[HOOKS]░░░░ Event-Based Architecture of Companion Scripts ░░░░░░░
 import {hooks as viewMasterHooks} from "./viewMaster.mjs";
 import {hooks as renderMasterHooks} from "./renderMaster.mjs";
-import {hooks as lightMasterHooks} from "./lightMaster.mjs";
-// #endregion ░░░░[CLASSES]░░░░
-// #endregion ▒▒▒▒[IMPORTS]▒▒▒▒
+import {hooks as lightMasterHooks} from "./lightMaster.mjs";
 
 const SVGDATA = {
     "USCSS Montero - Deck A": `
@@ -1159,7 +1155,7 @@ const RE = {
     for (const [hook, func] of Object.entries(hooks)) { Hooks.on(hook, func) }
 });
 
-// #region ████████ ON INIT: On-Initialization Hook ████████ ~
+// ████████ ON INIT: On-Initialization Hook ████████
 Hooks.once("init", async () => {
     console.log("██████ INITIALIZING ALIEN RPG OVERRIDES ... ██████");
     // CONFIG.debug.hooks = true;
@@ -1220,4 +1216,3 @@ Hooks.once("init", async () => {
     preloadHandlebarsTemplates();
     console.log("██████ OVERRIDES INITIALIZATION COMPLETE █████████");
 });
-// #endregion ▄▄▄▄▄ ON INIT ▄▄▄▄▄

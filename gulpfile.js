@@ -9,7 +9,7 @@ const BUILDFILES = {
         "./css/": ["scss/**/*.scss"]
     },
     html: {
-        "./dist/html": []
+        "./dist/html": ["html/**/*.html"]
     }
 };
 const REGEXPPATTERNS = {
@@ -39,7 +39,8 @@ const REGEXPPATTERNS = {
         [/(\s*\n\s*)+/g, "$1"], // Strip excess blank lines
         [/\s*\n$/g, ""], // Strip whitespace from end of files
         [/^\s*\n/g, ""] // Strip whitespace from start of files
-    ]
+    ],
+    html: []
 };
 // #endregion ▄▄▄▄▄ CONFIGURATION ▄▄▄▄▄
 
@@ -102,10 +103,8 @@ const BUILDFUNCS_HTML = ((sourceDestGlobs) => {
     const compiledHTMLFuncs = [];
     for (const [destGlob, sourceGlobs] of Object.entries(sourceDestGlobs)) {
         for (const sourceGlob of sourceGlobs) {
-            compiledHTMLFuncs.push(() => src(sourceGlobs)
-                .pipe(sass({outputStyle: "expanded"})
-                    .on("error", function reportError(err) { console.log(err.toString()); this.emit("end") }))
-                .pipe(prefix({cascade: false}))
+            compiledHTMLFuncs.push(() => REGEXPPATTERNS.html
+                .reduce((gulper, replaceArgs) => gulper.pipe(replacer(...replaceArgs)), src(sourceGlob))
                 .pipe(dest(destGlob)));
         }
     }
