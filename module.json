@@ -1,0 +1,25 @@
+{
+  "name": "alienrpgoverrides",
+  "title": "Alien RPG System Overrides",
+  "description": "A custom set of tweaks to the existing adaptation of the Alien RPG to Foundry.",
+  "version": "0.3",
+  "minimumCoreVersion": "0.8.1",
+  "compatibleCoreVersion": "0.8.9",
+  "author": "Eunomiac",
+  "esmodules": ["mjs/alienrpgoverrides.mjs"],
+  "styles": ["css/alienrpgoverrides.css"],
+  "scripts": [],
+  "packs": [],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "socket": true,
+  "url": "",
+  "manifest": "",
+  "download": "",
+  "license": "LICENSE.txt"
+}

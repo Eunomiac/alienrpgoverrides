@@ -1,7 +1,7 @@
 {
-  "name": "betterangels",
-  "version": "0.0.1-prealpha",
-  "description": "An implementation of the One Roll Engine by Greg Stolze: Play a supervillain compelled towards evil by a demon riding your soul!",
+  "name": "alienrpgoverrides",
+  "version": "0.3",
+  "description": "A custom set of tweaks to the existing adaptation of the Alien RPG to Foundry.",
   "scripts": {
     "build all": "gulp",
     "compile js": "gulp js",
