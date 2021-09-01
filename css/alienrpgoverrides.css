@@ -1,48 +1,4 @@
-/* ▌██░░ alienrpgoverrides v0.3 (2021) ║ MIT License ║ https://github.com/Eunomiac/alienrpgoverrides ░░██▐.vtt.players.background {
-  /* stylelint-disable selector-max-id -- References to underlying Foundry elements */
-}
-
-.vtt.players.background {
-  background-size: 1920px 1200px;
-}
-
-.vtt.players.background #notifications {
-  top: unset;
-  bottom: 300px;
-}
-
-.vtt.players.background #setup #join-game {
-  top: calc(50% - 50px);
-  margin-left: 560px;
-}
-
-.vtt.players.background #setup #join-game #world-title {
-  display: none;
-}
-
-.vtt.players.background #setup #join-game .join-body .left.flexcol {
-  -webkit-box-flex: 0.5;
-  -ms-flex: 0.5;
-  flex: 0.5;
-}
-
-.vtt.players.background #setup #join-game .join-body .left.flexcol .app:nth-child(2) {
-  display: none;
-}
-
-.vtt.players.background #setup #join-game .join-body .left.flexcol button[name='back-to-setup'] {
-  display: none;
-}
-
-.vtt.players.background #setup #join-game .join-body .right.flexcol {
-  display: none;
-}
-
-.vtt.players.background .watermark {
-  display: none;
-}
-
-.vtt.game.system-alienrpg {
+/* ▌██░░ alienrpgoverrides v0.3 (2021) ║ MIT License ║ https://github.com/Eunomiac/alienrpgoverrides ░░██▐.vtt.game.system-alienrpg {
   /* stylelint-disable selector-max-id -- References to underlying Foundry elements */
   /* stylelint-disable block-no-empty -- Placeholders to preserve HTML layout structure */
 }
