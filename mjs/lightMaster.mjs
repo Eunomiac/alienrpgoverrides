@@ -16,7 +16,7 @@ const parseLightUpdateData = (groupRef, upData) => {
     return updateData;
 };
 
-export const hooks = {
+export default (() => ({
     ARPGO_toggleLights: (groupRef, isActive) => {
         if (game.user.isGM) {
             const updateData = [];
@@ -44,5 +44,4 @@ export const hooks = {
             await canvas.scene.updateEmbeddedDocuments("AmbientLight", updateData);
         }
     }
-};
-
+}))();

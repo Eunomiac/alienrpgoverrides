@@ -1,0 +1,59 @@
+/* stylelint-disable selector-max-id -- References to underlying Foundry elements */
+/* stylelint-disable block-no-empty -- Placeholders to preserve HTML layout structure */
+
+#logo { display: none; }
+
+#navigation {
+    top: 0;
+    left: 50px;
+    transform: scale(0.75);
+    transform-origin: left top;
+
+    .scene-list .scene.nav-item {
+        .scene-name {
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 30px;
+        }
+        .scene-players { display: none; }
+    }
+}
+
+#loading { }
+
+#controls {
+    top: -5px;
+    left: 0;
+    transform: scale(0.5);
+    transform-origin: left top;
+}
+
+#notifications { }
+
+#sidebar { }
+
+#players {
+    left: 0;
+    margin-bottom: -8px;
+    font-weight: bold;
+    transform: scale(0.75);
+    transform-origin: left bottom;
+}
+
+#hotbar {
+    bottom: 2px;
+    left: 150px;
+    transform: scale(0.75);
+    transform-origin: left bottom;
+}
+
+#hud { }
+
+#board { }
+
+#pause {
+    bottom: 3%;
+    left: 60%;
+    width: 300px;
+}

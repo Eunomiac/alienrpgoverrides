@@ -1,17 +1,18 @@
 // #region ▒░▒░▒░▒[IMPORTS] Importing Modules ▒░▒░▒░▒ ~
 // #region ░░░░░░░[GMPREP]░░░░ Setup & Design Functions for Scenario Creation ░░░░░░░ ~
-import {setSceneFromSVG} from "./setSceneFromSVG.mjs";
+import setSceneFromSVG from "./setSceneFromSVG.mjs";
 // #endregion ░░░░[GMPREP]░░░░
 // #region ░░░░░░░[UTILITIES]░░░░ Utility Functions ░░░░░░░ ~
-import {preloadHandlebarsTemplates} from "./loadTemplates.mjs";
+import preloadHandlebarsTemplates from "./loadTemplates.mjs";
 // #endregion ░░░░[UTILITIES]░░░░
 // #region ░░░░░░░[HOOKS]░░░░ Event-Based Architecture of Companion Scripts ░░░░░░░ ~
-import {hooks as viewMasterHooks} from "./viewMaster.mjs";
-import {hooks as renderMasterHooks} from "./renderMaster.mjs";
-import {hooks as lightMasterHooks} from "./lightMaster.mjs";
+import viewMasterHooks from "./viewMaster.mjs";
+import renderMasterHooks from "./renderMaster.mjs";
+import lightMasterHooks from "./lightMaster.mjs";
 // #endregion ░░░░[CLASSES]░░░░
 // #endregion ▒▒▒▒[IMPORTS]▒▒▒▒
 
+/*~ DEV CODE */
 const SVGDATA = {
     "USCSS Montero - Deck A": `
     <g id="MONTERO_A">
@@ -1144,26 +1145,23 @@ const SVGDATA = {
     </g>
 </g>
     `
-};
+}; /* ~*/
 const RE = {
     get F() { return game.alienrpgoverrides },
     set F(v) { game.alienrpgoverrides = v }
 };
-
 /*
     Update Command with the missing [6].
     Update the talents that let people push twice with a warning about clicking the multi-push box.
 
 */
-
 // Register Hooks from imported scripts
 [
     viewMasterHooks,
     renderMasterHooks,
     lightMasterHooks
-].forEach((hooks) => {
-    for (const [hook, func] of Object.entries(hooks)) { Hooks.on(hook, func) }
-});
+].forEach((hooks) => Object.entries(hooks)
+    .forEach(([hook, func]) => Hooks.on(hook, func)));
 
 // #region ████████ ON INIT: On-Initialization Hook ████████ ~
 Hooks.once("init", async () => {
@@ -1171,7 +1169,8 @@ Hooks.once("init", async () => {
     // CONFIG.debug.hooks = true;
     game.socket.on("module.alienrpgoverrides", (data) => Hooks.call(...[data].flat()));
     RE.F = {
-        setSVG: (isKillingLights = false, isKillingWalls = true) => setSceneFromSVG(SVGDATA[canvas.scene.name], isKillingLights, isKillingWalls),
+        /*~ DEV CODE */
+        setSVG: (isKillingLights = false, isKillingWalls = true) => setSceneFromSVG(SVGDATA[canvas.scene.name], isKillingLights, isKillingWalls), /* ~*/
         scenes: {
             "Alien: Chariot of the Gods": {
                 isResettingViewOnActivate: true

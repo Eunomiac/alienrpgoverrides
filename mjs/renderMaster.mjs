@@ -1,11 +1,11 @@
 const SPLASHDEFS = {
     bloodbursterBirth: {
-        template: "systems/alienrpg/module/alienrpgoverrides/templates/bloodbursterBirth.html",
-        classes: ["maskedPopout", "bloodbursterBirth"],
+        template: "modules/alienrpgoverrides/html/bloodbursterBirth.html",
+        classes: ["masked-popout", "full-screen"],
         get position() { return getPositioning({padding: 0.1, aspectRatio: 1.7764705882352941176470588235294}) },
         options: {
             assets: [
-                "systems/alienrpg/module/alienrpgoverrides/templates/assets/bloodbursterBirth.webp"
+                "modules/alienrpgoverrides/assets/animation/bloodbursterBirth.webp"
             ],
             isBringingToTop: true
         }
@@ -53,50 +53,12 @@ const getPositioning = ({height, width, padding, aspectRatio}) => {
     }
 };
 
-export const hooks = {
-    init: () => {
-        for (const [id, {position, options}] of Object.entries(SPLASHDEFS)) {
-            SplashElement.All[id] = new SplashElement(
-                id,
-                position,
-                options
-            );
-        }
-    },
-    ARPGO_preloadSplashElement: (id) => {SplashElement.All[id]?.preload()},
-    ARPGO_renderSplashElement: (id) => {SplashElement.All[id]?.render()},
-    ARPGO_closeSplashElement: (id) => {SplashElement.All[id]?.close()}
-};
-
-export const templates = Object.values(SPLASHDEFS).map((splashDef) => splashDef.template);
-
-export class SplashElement {
+class SplashElement {
     static get All() { return (this._elements = this._elements ?? {}) }
 
     static getTemplate(id) { return SPLASHDEFS[id]?.template }
     static getClasses(id) { return SPLASHDEFS[id]?.classes || [] }
     static getOptions(id) { return SPLASHDEFS[id]?.options || {} }
-
-/*     static registerHooks() {
-        Hooks.on("init", () => {
-            for (const [id, {position, options}] of Object.entries(SPLASHDEFS)) {
-                SplashElement.All[id] = new SplashElement(
-                    id,
-                    position,
-                    options
-                );
-            }
-        });
-        Hooks.on("ARPGO_preloadSplashElement", (id) => {
-            SplashElement.All[id]?.preload();
-        });
-        Hooks.on("ARPGO_renderSplashElement", (id) => {
-            SplashElement.All[id]?.render();
-        });
-        Hooks.on("ARPGO_closeSplashElement", (id) => {
-            SplashElement.All[id]?.close();
-        });
-    } */
 
     constructor(type, {top, left, height, width} = {}, options = {}) {
         const [template, classes, baseOptions] = [
@@ -116,7 +78,7 @@ export class SplashElement {
             this.parseOptions();
             this.create();
         } else {
-            throw `Unrecognized type: ${type}`;
+            throw new Error(`Unrecognized type: ${type}`);
         }
     }
 
@@ -157,3 +119,20 @@ export class SplashElement {
         await this._element.close();
     }
 }
+
+export const templates = Object.values(SPLASHDEFS).map((splashDef) => splashDef.template);
+
+export default (() => ({
+    init: () => {
+        for (const [id, {position, options}] of Object.entries(SPLASHDEFS)) {
+            SplashElement.All[id] = new SplashElement(
+                id,
+                position,
+                options
+            );
+        }
+    },
+    ARPGO_preloadSplashElement: (id) => { SplashElement.All[id]?.preload() },
+    ARPGO_renderSplashElement: (id) => { SplashElement.All[id]?.render() },
+    ARPGO_closeSplashElement: (id) => { SplashElement.All[id]?.close() }
+}))();

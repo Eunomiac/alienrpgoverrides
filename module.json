@@ -10,13 +10,7 @@
   "styles": ["css/alienrpgoverrides.css"],
   "scripts": [],
   "packs": [],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "lang/en.json"
-    }
-  ],
+  "languages": [],
   "socket": true,
   "url": "",
   "manifest": "",

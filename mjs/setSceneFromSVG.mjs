@@ -186,7 +186,7 @@ const LIGHTCLASSES = {
     }
 };
 
-const setSceneFromSVG = async (svgXML, isClearingExistingLights = false, isClearingExistingWalls = true) => {
+export default async (svgXML, isClearingExistingLights = false, isClearingExistingWalls = true) => {
     const {scene} = canvas;
     if (typeof svgXML === "string" && /<((poly)?line|circle)/.test(svgXML)) {
         // Clear existing walls, if indicated.
@@ -224,7 +224,7 @@ const setSceneFromSVG = async (svgXML, isClearingExistingLights = false, isClear
         const wallParseFunc = (xmlLine, classParams = {}) => {
             try {
                 const lineWalls = [];
-                const [lineWalls_options, lineWalls_points] = [{}, []];
+                const [lineWallOptions, lineWallPoints] = [{}, []];
 
                 // Convert XML element string to Javascript object.
                 const dataLine = Object.fromEntries(xmlLine.match(/[^ ]+="[^"]+"/g)
@@ -233,7 +233,7 @@ const setSceneFromSVG = async (svgXML, isClearingExistingLights = false, isClear
                     )(xmlKeyVal.split(/=/))));
 
                 // Determine wall type from stroke color, define associated wall options
-                Object.assign(lineWalls_options, {
+                Object.assign(lineWallOptions, {
                     "#FFFFFF": {isNotWall: true}, // Black & White = Non-Walls (use as guides, rough drafts, etc.)
                     "#000000": {isNotWall: true},
                     "#FFFF00": {move: 1, sense: 1, sound: 1, door: 0}, // Yellow = Normal Wall
@@ -241,21 +241,21 @@ const setSceneFromSVG = async (svgXML, isClearingExistingLights = false, isClear
                     "#00FF00": {move: 1, sense: 2, sound: 1, door: 0}, // Green = Terrain Wall
                     "#FF5522": {move: 0, sense: 1, sound: 1, door: 0}, // Orange = Ethereal Wall
                     "#223399": {move: 1, sense: 1, sound: 1, door: 1}, // Purple = Normal Door
-                    "#FF00FF": {move: 1, sense: 1, sound: 1, door: 2},  // Magenta = Secret Door
+                    "#FF00FF": {move: 1, sense: 1, sound: 1, door: 2}, // Magenta = Secret Door
                     "#774422": {move: 1, sense: 0, sound: 0, door: 2} // Brown = Invisible Door
                 }[dataLine.stroke] || {});
 
-                if (lineWalls_options.isNotWall) { return false } // Skip recognized non-walls.
-                if (!Object.values(lineWalls_options).length) {
-                    throw `Unrecognized stroke color: ${dataLine.stroke}`; // Skip unrecognized walls, with error.
+                if (lineWallOptions.isNotWall) { return false } // Skip recognized non-walls.
+                if (!Object.values(lineWallOptions).length) {
+                    throw new Error(`Unrecognized stroke color: ${dataLine.stroke}`); // Skip unrecognized walls, with error.
                 }
-                if (lineWalls_options.group) {
-                    lineWalls_options["flags.alienrpgoverrides.group"] = lineWalls_options.group;
-                    delete lineWalls_options.group;
+                if (lineWallOptions.group) {
+                    lineWallOptions["flags.alienrpgoverrides.group"] = lineWallOptions.group;
+                    delete lineWallOptions.group;
                 }
 
                 // Determine wall coordinates from <polyline>/<line> data, parse as integers.
-                lineWalls_points.push(..."points" in dataLine
+                lineWallPoints.push(..."points" in dataLine
                     ? dataLine.points.split(/ /) // Data is for a 'polyline' object, described by a series of points.
                         .map((pointPair) => pointPair.split(/,/)
                             .map((pt) => parseInt(pt)))
@@ -265,17 +265,17 @@ const setSceneFromSVG = async (svgXML, isClearingExistingLights = false, isClear
                         ].map((pts) => pts.map((pt) => parseInt(pt))));
 
                 // Convert line coordinates (series of points) to a series of wall segments (defined by start and end points).
-                while (lineWalls_points.length > 1) {
+                while (lineWallPoints.length > 1) {
                     // Construct final data object for each segment.
                     lineWalls.push({
-                        ...lineWalls_options,
-                        c: [lineWalls_points.shift(), lineWalls_points[0]].flat()
+                        ...lineWallOptions,
+                        c: [lineWallPoints.shift(), lineWallPoints[0]].flat()
                     });
                 }
 
                 // Return array of wall data objects.
                 return lineWalls;
-            } catch(err) {
+            } catch (err) {
                 // Skip any individual XML elements that throw errors, but continue processing elements without halting.
                 console.error(`[SKIPPING WALL] ${err.message}`);
                 return false;
@@ -288,7 +288,7 @@ const setSceneFromSVG = async (svgXML, isClearingExistingLights = false, isClear
 
                 // Convert XML circle string to Javascript object.
                 const [, layerName, tintColor, x, y, radius, group] = xmlLine.match(/(?:id="([^"]+)" )?(?:fill="(#.{6})" )?cx="([.\d]+)" cy="([.\d]+)" r="([.\d]+)"(?: group="([^"]+)")?/);
-                const lightData = {
+                const circLightData = {
                     x: parseInt(x),
                     y: parseInt(y),
                     bright: (parseInt(radius) / canvas.scene.data.grid) * LIGHTCORRECTIONS.radius * (classParams.percentBright ?? LIGHTOVERRIDES.percentBright),
@@ -297,16 +297,16 @@ const setSceneFromSVG = async (svgXML, isClearingExistingLights = false, isClear
                 delete classParams.percentBright;
                 delete classParams.percentDim;
                 if (tintColor) {
-                    lightData.tintColor = tintColor;
+                    circLightData.tintColor = tintColor;
                 }
-                Object.assign(lightData, classParams);
+                Object.assign(circLightData, classParams);
                 if (group) {
-                    lightData["flags.alienrpgoverrides.group"] = group;
+                    circLightData["flags.alienrpgoverrides.group"] = group;
                 }
                 if (layerName) {
                     const [lightName, params] = layerName.split(/PARAMS-/);
                     if (lightName) {
-                        lightData["flags.alienrpgoverrides.name"] = lightName;
+                        circLightData["flags.alienrpgoverrides.name"] = lightName;
                     }
                     if (params) {
                         const parsedParams = Object.fromEntries(params.split(/-/).map((paramKeyVal) => paramKeyVal.split(/:/).map((kv) => (/^[0-9.]+$/.test(kv) ? parseFloat(kv) : kv))));
@@ -315,18 +315,18 @@ const setSceneFromSVG = async (svgXML, isClearingExistingLights = false, isClear
                             delete parsedParams.class;
                             Object.assign(parsedParams, classData);
                         }
-                        Object.assign(lightData, parsedParams);
+                        Object.assign(circLightData, parsedParams);
                     }
                 }
-                lightData.angle = lightData.angle ?? 360;
-                lightData.tintAlpha = (lightData.tintAlpha ?? LIGHTOVERRIDES.tintAlpha) * LIGHTCORRECTIONS.tintAlpha;
+                circLightData.angle = circLightData.angle ?? 360;
+                circLightData.tintAlpha = (circLightData.tintAlpha ?? LIGHTOVERRIDES.tintAlpha) * LIGHTCORRECTIONS.tintAlpha;
 
                 // Push light creation data to circLights
-                circLights.push(lightData);
+                circLights.push(circLightData);
 
                 // Return array of light data objects.
                 return circLights;
-            } catch(err) {
+            } catch (err) {
                 // Skip any individual XML elements that throw errors, but continue processing elements without halting.
                 console.error(`[SKIPPING LIGHT] ${err.message}`);
                 return false;
@@ -355,8 +355,6 @@ const setSceneFromSVG = async (svgXML, isClearingExistingLights = false, isClear
         await scene.createEmbeddedDocuments("Wall", wallData);
         await scene.createEmbeddedDocuments("AmbientLight", lightData);
     } else {
-        throw "[BAD SVG DATA] Requires XML contents of an SVG image, passed as a string.";
+        throw new Error("[BAD SVG DATA] Requires XML contents of an SVG image, passed as a string.");
     }
 };
-
-export {setSceneFromSVG};

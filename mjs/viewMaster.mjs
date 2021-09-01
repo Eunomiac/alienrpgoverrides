@@ -13,8 +13,7 @@ const setView = ({x, y, scale}) => {
     canvas.stage.scale.set(scale);
 };
 
-
-export const hooks = {
+export default (() => ({
     preUpdateScene: (scene) => {
         const [curScene, nextScene] = [canvas.scene, scene];
         console.log(`[PREUPDATE SCENE] ${curScene?.name} to ${nextScene?.name}`);
@@ -68,4 +67,4 @@ export const hooks = {
         console.log(`[SAVEVIEW] Saving View: ${JSON.stringify(VIEWS.current)}`);
         VIEWS.saved = VIEWS.current;
     }
-};
+}))();
