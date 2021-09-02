@@ -1,4 +1,4 @@
-/* ▌██░░ alienrpgoverrides v0.3 (2021) ║ MIT License ║ https://github.com/Eunomiac/alienrpgoverrides ░░██▐.vtt.game.system-alienrpg {
+/* ▌██░░ alienrpgoverrides v0.3 (2021) ║ MIT License ║ https://github.com/Eunomiac/alienrpgoverrides ░░██▐ */.vtt.game.system-alienrpg {
   /* stylelint-disable selector-max-id -- References to underlying Foundry elements */
   /* stylelint-disable block-no-empty -- Placeholders to preserve HTML layout structure */
 }
@@ -40,6 +40,10 @@
   transform-origin: left top;
 }
 
+.vtt.game.system-alienrpg #notifications {
+  top: 0;
+}
+
 .vtt.game.system-alienrpg #players {
   left: 0;
   margin-bottom: -8px;
@@ -64,13 +68,19 @@
 }
 
 .vtt.game.system-alienrpg #pause {
-  bottom: 3%;
-  left: 60%;
+  bottom: 80px;
+  left: 100px;
   width: 300px;
 }
 
 .vtt.game.system-alienrpg .app.window-app.masked-popout {
+  margin: 0;
+  background-color: #001700;
   border: unset;
+}
+
+.vtt.game.system-alienrpg .app.window-app.masked-popout h1 {
+  border-bottom: 1px solid #29A253;
 }
 
 .vtt.game.system-alienrpg .app.window-app.masked-popout .window-header {
@@ -85,4 +95,39 @@
   margin: 0;
   text-align: center;
   background: none;
+}
+
+.vtt.game.system-alienrpg .app.window-app.masked-popout.landing-page .window-content {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 45px 20px;
+  margin: 0;
+  overflow: hidden;
+  color: #4DF287;
+  background: none;
+}
+
+.vtt.game.system-alienrpg .app.window-app.masked-popout.landing-page .window-content p {
+  padding: 0 20px;
+  font-family: monospace;
+  font-size: 21px;
+  line-height: 1.4em;
+  text-align: justify;
+  text-shadow: 0 0 4px #000000, 0 0 4px #000000, 0 0 2px #000000, 0 0 2px #000000;
+}
+
+.vtt.game.system-alienrpg .app.window-app.masked-popout.landing-page .window-content p strong {
+  padding: 0 3px;
+  color: #000000;
+  text-shadow: none;
+  background-color: #29A253;
+  outline: 2px solid #000000;
+}
+
+.vtt.game.system-alienrpg .app.window-app.masked-popout.landing-page .window-content .travel-map {
+  width: calc(100% + 2 * 20px);
+  height: 100%;
+  margin: 20px 0 0 -20px;
+  background-color: #000000;
 }

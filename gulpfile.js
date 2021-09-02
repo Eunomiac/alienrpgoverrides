@@ -11,24 +11,24 @@ const BANNERTEMPLATE = {
     min: [
         `/* ▌██░░ <%= package.name %> v<%= package.version %> (${new Date().getFullYear()})`,
         "<%= package.license %> License",
-        "<%= package.repository.url %> ░░██▐"
+        "<%= package.repository.url %> ░░██▐ */"
     ].join(" ║ ")
 };
 const BUILDFILES = {
     js: {
-        "./dist/mjs": ["mjs/**/*.mjs"]
+        "./dist/alienrpgoverrides/mjs": ["mjs/**/*.mjs"]
     },
     css: {
-        "./dist/css/": ["scss/**/*.scss"],
+        "./dist/alienrpgoverrides/css/": ["scss/**/*.scss"],
         "./css/": ["scss/**/*.scss"]
     },
     html: {
-        "./dist/html": ["html/**/*.html"]
+        "./dist/alienrpgoverrides/html": ["html/**/*.html"]
     },
     assets: {
-        "./dist/assets": ["assets/**/*.*"],
-        "./dist/compendiumImport": ["compendiumImport/**/*.*"],
-        "./dist": ["module.json"]
+        "./dist/alienrpgoverrides/assets": ["assets/**/*.*"],
+        "./dist/alienrpgoverrides/compendiumImport": ["compendiumImport/**/*.*"],
+        "./dist/alienrpgoverrides": ["module.json"]
     }
 };
 const REGEXPPATTERNS = {
@@ -66,7 +66,7 @@ const REGEXPPATTERNS = {
                             lineLeft.replace(/▌█/u, `▌${"█".repeat(numFullPadLeft + 1)}`)
                                 .replace(/░/u, "░".repeat(numFadePadLeft + 1)),
                             lineRight.replace(/█▐/u, `${"█".repeat(numFullPadRight + 1)}▐`)
-                                .replace(/░/u, "░".repeat(numFadePadRight + 1))                     
+                                .replace(/░/u, "░".repeat(numFadePadRight + 1))
                         ].join("");
                     }
                     return line;
@@ -94,6 +94,7 @@ const REGEXPPATTERNS = {
         ],
         [/\n?\s*\/\*~(.|\n)*?~\*\/\n?/gs, ""], // Strip multi-line comments of form '/*~ ... ~*/'
         [/\n?\s*\/\*\*(.|\n)*?\*\/\n?/gs, ""], // Strip multi-line comments beginning with '/**'
+        [/\n?\s*\/\*DEVCODE\*\/(.|\n)*?\/\*!DEVCODE\*\/\n?/gs, ""], // Strip developer code between '/*DEVCODE*/' and '/*!DEVCODE*/'
         [/\n?\s*\/\/~.*?$/gm, ""], // Strip single-line comments beginning with '//~'
         [/\s*\/\/\s*eslint.*$/gm, ""], // Strip eslint enable/disable single-line comments
         [/\s*\/\*\s*eslint[^*]*\*\/\s*/g, ""], // Strip eslint enable/disable mult-line comments
@@ -138,10 +139,11 @@ const DEFAULTBUILDFUNCS = [];
 // #endregion ▒▒▒▒[INITIALIZATION]▒▒▒▒
 
 // #region ████████ CLEAR DIST: Clear Out /dist Folder ████████ ~
-BUILDFUNCS.init = (done) => {
-    clean.sync(["./dist"]);
+const cleanDest = (destGlob) => (done) => {
+    clean.sync([destGlob]);
     return done();
 };
+BUILDFUNCS.init = cleanDest("./dist/alienrpgoverrides");
 // #endregion ▄▄▄▄▄ CLEAR DIST ▄▄▄▄▄
 
 // #region ████████ JS: Compiling Javascript ████████ ~
@@ -169,15 +171,15 @@ const BUILDFUNCS_JS = ((sourceDestGlobs) => {
 })(BUILDFILES.js);
 
 if (BUILDFUNCS_JS.length) {
-    BUILDFUNCS.js = parallel(...BUILDFUNCS_JS);
+    BUILDFUNCS.js = series(cleanDest("./dist/alienrpgoverrides/mjs"), parallel(...BUILDFUNCS_JS));
     DEFAULTBUILDFUNCS.push(BUILDFUNCS.js);
 }
 // #endregion ▄▄▄▄▄ JS ▄▄▄▄▄
 // #region ████████ CSS: Compiling CSS ████████ ~
 const BUILDFUNCS_CSS = ((sourceDestGlobs) => {
     const compiledCSSFuncs = [];
-    for (const [destGlob, sourceGlobs] of Object.entries(sourceDestGlobs)) { 
-        for (const sourceGlob of sourceGlobs) { 
+    for (const [destGlob, sourceGlobs] of Object.entries(sourceDestGlobs)) {
+        for (const sourceGlob of sourceGlobs) {
             compiledCSSFuncs.push(
                 () => src(sourceGlobs)
                     /* .pipe(bundleCSS([
@@ -199,7 +201,7 @@ const BUILDFUNCS_CSS = ((sourceDestGlobs) => {
 })(BUILDFILES.css);
 
 if (BUILDFUNCS_CSS.length) {
-    BUILDFUNCS.css = series(...BUILDFUNCS_CSS);
+    BUILDFUNCS.css = series(cleanDest("./dist/alienrpgoverrides/css"), ...BUILDFUNCS_CSS);
     DEFAULTBUILDFUNCS.push(BUILDFUNCS.css);
 }
 // #endregion ▄▄▄▄▄ CSS ▄▄▄▄▄
@@ -217,15 +219,15 @@ const BUILDFUNCS_HTML = ((sourceDestGlobs) => {
 })(BUILDFILES.html);
 
 if (BUILDFUNCS_HTML.length) {
-    BUILDFUNCS.html = parallel(...BUILDFUNCS_HTML);
+    BUILDFUNCS.html = series(cleanDest("./dist/alienrpgoverrides/html"), parallel(...BUILDFUNCS_HTML));
     DEFAULTBUILDFUNCS.push(BUILDFUNCS.html);
 }
 // #endregion ▄▄▄▄▄ HTML ▄▄▄▄▄
 // #region ████████ ASSETS: Copying Assets to Dist ████████ ~
 const BUILDFUNCS_ASSETS = ((sourceDestGlobs) => {
     const compiledAssetFuncs = [];
-    for (const [destGlob, sourceGlobs] of Object.entries(sourceDestGlobs)) { 
-        for (const sourceGlob of sourceGlobs) { 
+    for (const [destGlob, sourceGlobs] of Object.entries(sourceDestGlobs)) {
+        for (const sourceGlob of sourceGlobs) {
             compiledAssetFuncs.push(
                 () => src(sourceGlobs)
                     .pipe(dest(destGlob))
@@ -236,7 +238,7 @@ const BUILDFUNCS_ASSETS = ((sourceDestGlobs) => {
 })(BUILDFILES.assets);
 
 if (BUILDFUNCS_ASSETS.length) {
-    BUILDFUNCS.assets = parallel(...BUILDFUNCS_ASSETS);
+    BUILDFUNCS.assets = series(cleanDest("./dist/alienrpgoverrides/assets"), parallel(...BUILDFUNCS_ASSETS));
     DEFAULTBUILDFUNCS.push(BUILDFUNCS.assets);
 }
 // #endregion ▄▄▄▄▄ CSS ▄▄▄▄▄

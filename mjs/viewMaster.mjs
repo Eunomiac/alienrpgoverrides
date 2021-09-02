@@ -1,7 +1,5 @@
-const RE = {
-    get F() { return game.alienrpgoverrides },
-    set F(v) { game.alienrpgoverrides = v }
-};
+import {RE} from "./utils.mjs";
+
 const VIEWS = {
     get current() { return canvas.scene._viewPosition },
     get initial() { return canvas.scene.data.initial },
@@ -14,7 +12,7 @@ const setView = ({x, y, scale}) => {
 };
 
 export default (() => ({
-    preUpdateScene: (scene) => {
+    "~preUpdateScene": (scene) => {
         const [curScene, nextScene] = [canvas.scene, scene];
         console.log(`[PREUPDATE SCENE] ${curScene?.name} to ${nextScene?.name}`);
         if (curScene.name !== nextScene.name && RE.F.scenes[curScene.name]?.ship === RE.F.scenes[nextScene.name]?.ship) {
@@ -30,9 +28,9 @@ export default (() => ({
         VIEWS.lastScene = curScene;
         return true;
     },
-    updateScene: (scene) => {
+    "~updateScene": (scene) => {
         const [curScene, nextScene] = [canvas.scene, scene];
-        console.log(`[PREUPDATE SCENE] ${curScene?.name} to ${nextScene?.name}`);
+        console.log(`[UPDATE SCENE] ${curScene?.name} to ${nextScene?.name}`);
         if (curScene.name !== nextScene.name && RE.F.scenes[curScene.name]?.ship === RE.F.scenes[nextScene.name]?.ship) {
             VIEWS.saved = VIEWS.current;
             console.log(`[UPDATE SCENE] Saving View: ${JSON.stringify(VIEWS.saved)}`);
@@ -43,7 +41,7 @@ export default (() => ({
         VIEWS.lastScene = curScene;
         return true;
     },
-    canvasReady: () => {
+    "~canvasReady": () => {
         console.log("[CANVAS READY] Canvas Ready");
         if (VIEWS.saved) {
             console.log(`[CANVAS READY] Forcing View: ${JSON.stringify(VIEWS.saved)}`);
@@ -53,17 +51,17 @@ export default (() => ({
             setView(VIEWS.initial);
         }
     },
-    ARPGO_unlockSceneView: (sceneName) => {
+    "unlockSceneView": (sceneName) => {
         RE.F.scenes[sceneName].isResettingViewOnActivate = false;
     },
-    ARPGO_forceView: (x, y, scale) => {
+    "forceView": (x, y, scale) => {
         if (/^i/.test(`${x}`)) {
             setView(VIEWS.initial);
         } else {
             setView({x, y, scale});
         }
     },
-    ARPGO_saveView: () => {
+    "saveView": () => {
         console.log(`[SAVEVIEW] Saving View: ${JSON.stringify(VIEWS.current)}`);
         VIEWS.saved = VIEWS.current;
     }

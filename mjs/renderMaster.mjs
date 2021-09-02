@@ -1,19 +1,64 @@
+import {RE, getUserChar} from "./utils.mjs";
+import {getActorData} from "./charMaster.mjs";
+
 const SPLASHDEFS = {
     bloodbursterBirth: {
         template: "modules/alienrpgoverrides/html/bloodbursterBirth.html",
         classes: ["masked-popout", "full-screen"],
-        get position() { return getPositioning({padding: 0.1, aspectRatio: 1.7764705882352941176470588235294}) },
+        get position() { return getPositioning({padding: 0.1, aspectRatio: 1.77647}) },
         options: {
             assets: [
-                "modules/alienrpgoverrides/assets/animation/bloodbursterBirth.webp"
+                "modules/alienrpgoverrides/assets/animation/bloodbursterBirth.webp",
+                "modules/alienrpgoverrides/assets/sounds/script_bloodbursterBirth.ogg"
             ],
             isBringingToTop: true
         }
-    }
+    },
+    scenarioIntro: {
+        template: "modules/alienrpgoverrides/html/landingPage/scenarioIntro.html",
+        classes: ["masked-popout", "landing-page", "scenario-intro"],
+        get position() { return {top: 0, left: window.outerWidth - 790, height: window.outerHeight, width: 790} },
+        options: {
+            assets: [
+                "modules/alienrpgoverrides/assets/splash/travelMap.png"
+            ]
+        }
+    }/* ,
+    travelMap: {
+        template: "modules/alienrpgoverrides/html/landingPage/travelMap.html",
+        classes: ["masked-popout", "landing-page", "travel-map"],
+        position: {bottom: 100, left: 50, height: 600},
+        options: {
+            assets: [
+                "modules/alienrpgoverrides/assets/splash/travelMap.png"
+            ]
+        }
+    } *//* ,
+    pcFront: {
+        template: "modules/alienrpgoverrides/html/landingPage/pcFront.html",
+        classes: ["masked-popout", "landing-page", "pc-front"],
+        position: {top: 40, left: 730, height: 300, width: 500},
+        options: {}
+    },
+    pcSkills: {
+        template: "modules/alienrpgoverrides/html/landingPage/pcSkills.html",
+        classes: ["masked-popout", "landing-page", "pc-skills"],
+        position: {top: 390, left: 730, height: 300, width: 500},
+        options: {}
+    },
+    pcInventory: {
+        template: "modules/alienrpgoverrides/html/landingPage/pcInventory.html",
+        classes: ["masked-popout", "landing-page", "pc-inventory"],
+        position: {top: 740, left: 730, height: 200, width: 500},
+        options: {}
+    } */
 };
 
 const getPositioning = ({height, width, padding, aspectRatio}) => {
     if (height && width) {
+        if (padding) {
+            return getPositioning({padding, aspectRatio: width / height});
+        }
         return {
             top: 0.5 * (window.innerHeight - height),
             left: 0.5 * (window.innerWidth - width),
@@ -21,7 +66,7 @@ const getPositioning = ({height, width, padding, aspectRatio}) => {
             width
         };
     } else {
-        // Determine height and width from provided data.
+        // Determine height and width from provided data, then recall function with {height, width}
         if (height && aspectRatio) {
             width = parseInt(height * aspectRatio);
         } else if (height && padding) {
@@ -123,16 +168,22 @@ class SplashElement {
 export const templates = Object.values(SPLASHDEFS).map((splashDef) => splashDef.template);
 
 export default (() => ({
-    init: () => {
-        for (const [id, {position, options}] of Object.entries(SPLASHDEFS)) {
-            SplashElement.All[id] = new SplashElement(
-                id,
-                position,
-                options
-            );
+    "~init": () => {
+        for (const [id, {position}] of Object.entries(SPLASHDEFS)) {
+            SplashElement.All[id] = new SplashElement(id, position);
         }
     },
-    ARPGO_preloadSplashElement: (id) => { SplashElement.All[id]?.preload() },
-    ARPGO_renderSplashElement: (id) => { SplashElement.All[id]?.render() },
-    ARPGO_closeSplashElement: (id) => { SplashElement.All[id]?.close() }
+    "~canvasReady": () => ["scenarioIntro", "travelMap", "pcFront", "pcSkills", "pcInventory"].forEach((id) => {
+        console.log(`[CANVAS READY] Preparing ${id}...`);
+        if (RE.F.scenes[canvas.scene.name]?.isLandingPage) {
+            console.log(`[CANVAS READY] ... RENDERING ${id}`);
+            SplashElement.All[id]?.render();
+        } else {
+            console.log(`[CANVAS READY] ... CLOSING ${id}`);
+            SplashElement.All[id]?.close();
+        }
+    }),
+    "preloadSplashElement": (id) => { SplashElement.All[id]?.preload() },
+    "renderSplashElement": (id) => { SplashElement.All[id]?.render() },
+    "closeSplashElement": (id) => { SplashElement.All[id]?.close() }
 }))();

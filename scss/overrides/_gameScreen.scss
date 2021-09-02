@@ -29,7 +29,9 @@
     transform-origin: left top;
 }
 
-#notifications { }
+#notifications {
+    top: 0;
+}
 
 #sidebar { }
 
@@ -53,7 +55,7 @@
 #board { }
 
 #pause {
-    bottom: 3%;
-    left: 60%;
+    bottom: 80px;
+    left: 100px;
     width: 300px;
 }

@@ -1,18 +1,21 @@
 // #region ▒░▒░▒░▒[IMPORTS] Importing Modules ▒░▒░▒░▒ ~
+/*DEVCODE*/
 // #region ░░░░░░░[GMPREP]░░░░ Setup & Design Functions for Scenario Creation ░░░░░░░ ~
 import setSceneFromSVG from "./setSceneFromSVG.mjs";
 // #endregion ░░░░[GMPREP]░░░░
+/*!DEVCODE*/
 // #region ░░░░░░░[UTILITIES]░░░░ Utility Functions ░░░░░░░ ~
-import preloadHandlebarsTemplates from "./loadTemplates.mjs";
+import {RE} from "./utils.mjs";
 // #endregion ░░░░[UTILITIES]░░░░
-// #region ░░░░░░░[HOOKS]░░░░ Event-Based Architecture of Companion Scripts ░░░░░░░ ~
+// #region ░░░░░░░[SCRIPTS]░░░░ Companion Script Hooks & Templates for Registration & Preloading ░░░░░░░ ~
 import viewMasterHooks from "./viewMaster.mjs";
-import renderMasterHooks from "./renderMaster.mjs";
+import renderMasterHooks, {templates as renderMasterTemplates} from "./renderMaster.mjs";
 import lightMasterHooks from "./lightMaster.mjs";
-// #endregion ░░░░[CLASSES]░░░░
+// #endregion ░░░░[SCRIPTS]░░░░
 // #endregion ▒▒▒▒[IMPORTS]▒▒▒▒
 
-/*~ DEV CODE */
+/*DEVCODE*/
+// #region SVGDATA ~
 const SVGDATA = {
     "USCSS Montero - Deck A": `
     <g id="MONTERO_A">
@@ -1145,14 +1148,18 @@ const SVGDATA = {
     </g>
 </g>
     `
-}; /* ~*/
-const RE = {
-    get F() { return game.alienrpgoverrides },
-    set F(v) { game.alienrpgoverrides = v }
 };
+// #endregion
+/*!DEVCODE*/
 /*~
     Update Command with the missing [6].
     Update the talents that let people push twice with a warning about clicking the multi-push box.
+
+    LANDING PAGE
+    - Montero Scenario / Story
+    - Montero Ship Manifest/Travel Log
+    - Map
+    - Character Pages (use User class to show proper sheet to each character?)
 
 ~*/
 // Register Hooks from imported scripts
@@ -1160,8 +1167,8 @@ const RE = {
     viewMasterHooks,
     renderMasterHooks,
     lightMasterHooks
-].forEach((hooks) => Object.entries(hooks)
-    .forEach(([hook, func]) => Hooks.on(hook, func)));
+].forEach((hooks) => Object.entries(hooks) // Namespace each hook with a prefix, unless hook begins with tilde ('~')
+    .forEach(([hook, func]) => Hooks.on(`ARPGO_${hook}`.replace(/(ARPGO_)?~/, ""), func)));
 
 // #region ████████ ON INIT: On-Initialization Hook ████████ ~
 Hooks.once("init", async () => {
@@ -1169,43 +1176,23 @@ Hooks.once("init", async () => {
     // CONFIG.debug.hooks = true;
     game.socket.on("module.alienrpgoverrides", (data) => Hooks.call(...[data].flat()));
     RE.F = {
-        /*~ DEV CODE */
-        setSVG: (isKillingLights = false, isKillingWalls = true) => setSceneFromSVG(SVGDATA[canvas.scene.name], isKillingLights, isKillingWalls), /* ~*/
+        /*DEVCODE*/
+        setSVG: (isKillingLights = false, isKillingWalls = true) => setSceneFromSVG(SVGDATA[canvas.scene.name], isKillingLights, isKillingWalls),
+        /*!DEVCODE*/
         scenes: {
-            "Alien: Chariot of the Gods": {
-                isResettingViewOnActivate: true
-            },
-            "USCSS Montero - Deck A": {
-                isResettingViewOnActivate: true,
-                foregroundBlocker: "ASSETS/Alien%20RPG/Backgrounds/Overlay-Montero-A.webp",
-                ship: "Montero",
-                deck: 1,
-                initialView: {x: 2088, y: 2878, scale: 0.62}
-            },
-            "USCSS Cronus - Deck A": {
-                isResettingViewOnActivate: true,
-                ship: "Cronus",
-                deck: 1,
-                initialView: {x: 1976, y: 1319, scale: 0.5}
-            },
-            "USCSS Cronus - Deck B": {
-                isResettingViewOnActivate: true,
-                ship: "Cronus",
-                deck: 2,
-                initialView: {x: 1976, y: 1319, scale: 0.5}
-            },
-            "USCSS Cronus - Deck C": {
-                isResettingViewOnActivate: true,
-                ship: "Cronus",
-                deck: 3,
-                initialView: {x: 1976, y: 1319, scale: 0.5}
-            },
-            "USCSS Cronus - Deck D": {
-                isResettingViewOnActivate: true,
-                ship: "Cronus",
-                deck: 4,
-                initialView: {x: 1976, y: 1319, scale: 0.5}
-            }
+            "Alien: Chariot of the Gods": {isResettingViewOnActivate: true, isLandingPage: true},
+            "USCSS Montero - Deck A": {isResettingViewOnActivate: true, ship: "Montero", deck: 1},
+            "USCSS Cronus - Deck A": {isResettingViewOnActivate: true, ship: "Cronus", deck: 1},
+            "USCSS Cronus - Deck B": {isResettingViewOnActivate: true, ship: "Cronus", deck: 2},
+            "USCSS Cronus - Deck C": {isResettingViewOnActivate: true, ship: "Cronus", deck: 3},
+            "USCSS Cronus - Deck D": {isResettingViewOnActivate: true, ship: "Cronus", deck: 4}
+        },
+        players: {
+            "Brett": {charName: "Davis", color: "#eff24d"},
+            "Dusty": {charName: "Cham", color: "#f2cb4d"},
+            "J.Rook": {charName: "Rye", color: "#b4ae05"},
+            "ParanoidAndroid": {charName: "Wilson", color: "#9e7f00"},
+            "Thaum": {charName: "Miller", color: "#f28f4d"}
         },
         call: (hook, ...args) => {
             game.socket.emit("module.alienrpgoverrides", [`ARPGO_${hook}`, ...args]);
@@ -1213,7 +1200,7 @@ Hooks.once("init", async () => {
         callGM: (hook, ...args) => {
             Hooks.call(`ARPGO_${hook}`, ...args);
             RE.F.call(hook, ...args);
-        }, 
+        },
         setLights: (...args) => RE.F.callGM("setLights", ...args),
         toggleLights: (...args) => RE.F.callGM("toggleLights", ...args),
         toggleDarkness: () => RE.F.call("toggleDarkness"),
@@ -1222,7 +1209,36 @@ Hooks.once("init", async () => {
         loadBirth: () => RE.F.call("renderSplashElement", "bloodbursterBirth"),
         closeBirth: () => RE.F.call("closeSplashElement", "bloodbursterBirth")
     };
-    preloadHandlebarsTemplates();
+    loadTemplates([
+        ...renderMasterTemplates
+    ]);
     console.log("██████ OVERRIDES INITIALIZATION COMPLETE █████████");
 });
+Hooks.once("ready", () => {
+    console.log("██████ READYING ALIEN RPG OVERRIDES ... ██████");
+    game.users.forEach((user) => {
+        const {id, data: {name}} = user;
+        if (name in RE.F.players) {
+            RE.F.players[name].user = user;
+            RE.F.players[name].char = game.actors.find((actor) => new RegExp(RE.F.players[name].charName, "ui").test(actor.name));
+        }
+    });
+    if (game.user.isGM) {
+        game.users.forEach((user) => {
+            if (user.data.name in RE.F.players && !user.data.flags?.alienrpgoverrides?.isSetup) {
+                const {char, charName, color} = RE.F.players[user.data.name];
+                const updateData = {
+                    "avatar": `modules/alienrpgoverrides/assets/characters/${charName.toLowerCase()}.webp`,
+                    "character": char.id,
+                    color,
+                    "flag.alienrpgoverrides.isSetup": false
+                };
+                user.update(updateData);
+            }
+        });
+    }
+    console.log("██████ OVERRIDES READYING COMPLETE █████████");
+});
 // #endregion ▄▄▄▄▄ ON INIT ▄▄▄▄▄
+
+export default RE;
