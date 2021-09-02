@@ -1,1 +1,0 @@
-/* ▌██░░ alienrpgoverrides v0.3 (2021) ║ MIT License ║ https://github.com/Eunomiac/alienrpgoverrides ░░██▐import{templates as splashElementTemplates}from"./renderMaster.mjs";export default async()=>loadTemplates([...splashElementTemplates]);
