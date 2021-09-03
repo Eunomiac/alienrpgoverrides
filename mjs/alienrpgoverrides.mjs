@@ -1188,6 +1188,9 @@ Hooks.once("init", async () => {
             "USCSS Cronus - Deck D": {isResettingViewOnActivate: true, ship: "Cronus", deck: 4}
         },
         players: {
+            /*DEVCODE*/
+            "Game Mother": {charName: "Euno", color: "#ff0000"},
+            /*!DEVCODE*/
             "Brett": {charName: "Davis", color: "#eff24d"},
             "Dusty": {charName: "Cham", color: "#f2cb4d"},
             "J.Rook": {charName: "Rye", color: "#b4ae05"},
@@ -1233,11 +1236,23 @@ Hooks.once("ready", () => {
                     color,
                     "flag.alienrpgoverrides.isSetup": false
                 };
+                /*DEVCODE*/
+                if (charName === "Euno") {
+                    updateData.avatar = "modules/alienrpgoverrides/assets/characters/cham.webp";
+                }
+                /*!DEVCODE*/
                 user.update(updateData);
             }
         });
     }
     console.log("██████ OVERRIDES READYING COMPLETE █████████");
+});
+Hooks.on("ready", () => {
+    if (RE.F.scenes[canvas.scene.name]?.isLandingPage) {
+        RE.F.players[game.user.data.name]?.char.sheet.close(true).then(() => {
+            RE.F.players[game.user.data.name]?.char.sheet.render(true, {left: 100, top: 50});
+        });
+    }
 });
 // #endregion ▄▄▄▄▄ ON INIT ▄▄▄▄▄
 

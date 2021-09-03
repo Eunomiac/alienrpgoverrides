@@ -1,7 +1,30 @@
 .vtt.game.system-alienrpg {
     @import 'overrides/gameScreen';
 
+    .chat-message {
+        .message-header {
+            .flavor-text { display: none; }
+        }
+
+        .message-content {
+            .table-draw {
+                .dice-roll { display: none; }
+                .table-description { display: none; }
+
+                .table-results {
+                    .table-result .result-image { display: none; }
+                }
+            }
+        }
+    }
+
     .app.window-app {
         &.masked-popout { @import 'popouts'; }
+
+        &.sheet.actor {
+            @import 'overrides/actorSheet';
+            &.actor-sheet { }
+            &.synth-sheet { }
+        }
     }
 }

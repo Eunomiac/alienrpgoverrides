@@ -1,0 +1,42 @@
+{
+	 "name":"{{Name}}",
+	 "type":"{{Type}}",
+	 "img":"modules/alienrpgoverrides/assets/critical-injury/{{TrimmedName}}.png",
+	 "data": {
+		"header": { "active": true },
+		"attributes":{
+			"fatal": {{Fatal}},
+			"effects": "{{Effect}}",
+			"timelimit": {
+				"value": {{TimeLimit}}
+			},
+			"healingtime": {
+				"value": "{{HealingTime}}"
+			}
+		},		
+		"modifiers": {
+			"attributes": {
+				"health": { "value": {{modHealth}} },
+				"stress": { "value": {{modStress}} },
+				"str": { "value": {{modStrength}} },
+				"wit": { "value": {{modWits}} },
+				"agl": { "value": {{modAgility}} },
+				"emp": { "value": {{modEmpathy}} }
+			},
+			"skills": {
+				"heavyMach": { "value": {{modHeavyMach}} },
+				"closeCbt": { "value": {{modCloseCbt}} },
+				"stamina": { "value": {{modStamina}} },
+				"rangedCbt": { "value": {{modRangedCbt}} },
+				"mobility": { "value": {{modMobility}} },
+				"piloting": { "value": {{modPiloting}} },
+				"command": { "value": {{modCommand}} },
+				"manipulation": { "value": {{modManipulation}} },
+				"medicalAid": { "value": {{modMedicalAid}} },
+				"observation": { "value": {{modObservation}} },
+				"survival": { "value": {{modSurvival}} },
+				"comtech": { "value": {{modComtech}} }
+			}
+		}
+	}
+}

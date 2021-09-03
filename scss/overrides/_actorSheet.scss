@@ -1,0 +1,72 @@
+& {
+    .window-header {
+        position: relative;
+        top: 65px;
+        display: block;
+        width: calc(100% + 8px + 2px);
+        min-height: 60px;
+        margin: -67px 0 2px;
+        background: transparent;
+
+        .window-title { display: none; }
+
+        .header-button.configure-sheet { display: none; }
+        .header-button.configure-token { display: none; }
+        .header-button.submit { display: none; }
+
+        .header-button.close {
+            display: block;
+            width: 18px;
+            height: 18px;
+            padding: 0;
+            margin: 0;
+            margin-left: calc(100% - 18px);
+            font-size: 0;
+            background: rgb(41, 162, 83);
+
+            i {
+                display: block;
+                width: 18px;
+                height: 18px;
+                font-size: 18px;
+                text-align: center;
+            }
+        }
+    }
+
+    .window-content form {
+        color: var(--aliengreen);
+
+        input[type=text],
+        input[type=number],
+        input[type=password],
+        input[type=date],
+        input[type=time],
+        select,
+        .select-css { color: var(--aliengreen); }
+
+        .sheet-body {
+            .tab.general {
+                .grid-crtPage {
+                    .dots.experience {
+                        margin-top: 14px;
+                        color: var(--aliengreen) !important;
+                        transform: scale(2);
+                        &.xp_faded { display: none; }
+
+                        > .resource-label { display: none; }
+                        &.sp_faded > .resource-label { display: block; }
+                        .xp_dots_pos { padding-top: 5px; }
+                    }
+                }
+            }
+            .tab.skills {
+                .grid-container {
+                    .Col3 {
+                        color: var(--aliengreen);
+                    }
+                }
+            }
+        }
+    }
+}
