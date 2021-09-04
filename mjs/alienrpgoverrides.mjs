@@ -9,8 +9,14 @@ import {RE} from "./utils.mjs";
 // #endregion ░░░░[UTILITIES]░░░░
 // #region ░░░░░░░[SCRIPTS]░░░░ Companion Script Hooks & Templates for Registration & Preloading ░░░░░░░ ~
 import viewMasterHooks from "./viewMaster.mjs";
-import renderMasterHooks, {templates as renderMasterTemplates} from "./renderMaster.mjs";
+import renderMasterHooks, {
+    templates as renderMasterTemplates
+} from "./renderMaster.mjs";
 import lightMasterHooks from "./lightMaster.mjs";
+import charMasterHooks, {
+    templates as charMasterTemplates,
+    getActorData
+} from "./charMaster.mjs";
 // #endregion ░░░░[SCRIPTS]░░░░
 // #endregion ▒▒▒▒[IMPORTS]▒▒▒▒
 
@@ -1155,25 +1161,23 @@ const SVGDATA = {
     Update Command with the missing [6].
     Update the talents that let people push twice with a warning about clicking the multi-push box.
 
-    LANDING PAGE
-    - Montero Scenario / Story
-    - Montero Ship Manifest/Travel Log
-    - Map
-    - Character Pages (use User class to show proper sheet to each character?)
-
 ~*/
 // Register Hooks from imported scripts
 [
     viewMasterHooks,
     renderMasterHooks,
-    lightMasterHooks
+    lightMasterHooks,
+    charMasterHooks
 ].forEach((hooks) => Object.entries(hooks) // Namespace each hook with a prefix, unless hook begins with tilde ('~')
     .forEach(([hook, func]) => Hooks.on(`ARPGO_${hook}`.replace(/(ARPGO_)?~/, ""), func)));
 
 // #region ████████ ON INIT: On-Initialization Hook ████████ ~
 Hooks.once("init", async () => {
     console.log("██████ INITIALIZING ALIEN RPG OVERRIDES ... ██████");
+    /*DEVCODE*/
     // CONFIG.debug.hooks = true;
+    window.RE = RE;
+    /*!DEVCODE*/
     game.socket.on("module.alienrpgoverrides", (data) => Hooks.call(...[data].flat()));
     RE.F = {
         /*DEVCODE*/
@@ -1195,7 +1199,8 @@ Hooks.once("init", async () => {
             "Dusty": {charName: "Cham", color: "#f2cb4d"},
             "J.Rook": {charName: "Rye", color: "#b4ae05"},
             "ParanoidAndroid": {charName: "Wilson", color: "#9e7f00"},
-            "Thaum": {charName: "Miller", color: "#f28f4d"}
+            "Thaum": {charName: "Miller", color: "#f28f4d"},
+            "Euno": {charName: "Euno", color: "#ff0000"}
         },
         call: (hook, ...args) => {
             game.socket.emit("module.alienrpgoverrides", [`ARPGO_${hook}`, ...args]);
@@ -1213,8 +1218,24 @@ Hooks.once("init", async () => {
         closeBirth: () => RE.F.call("closeSplashElement", "bloodbursterBirth")
     };
     loadTemplates([
-        ...renderMasterTemplates
+        ...renderMasterTemplates,
+        ...charMasterTemplates
     ]);
+    Handlebars.registerHelper({
+        mergeDicePools: (actorData) => {
+            const {attributes, skills} = actorData;
+            for (const [skillName, skillData] of Object.entries(skills)) {
+                actorData.skills[skillName] = {
+                    ...skillData,
+                    atrVal: attributes[skillData.ability].value,
+                    hasNegMod: skillData.value + attributes[skillData.ability].value > skillData.mod,
+                    hasPosMod: skillData.value + attributes[skillData.ability].value < skillData.mod,
+                    floorTotal: Math.max(skillData.mod, 0)
+                };
+            }
+        },
+        includeAllCrits: (actorData, critList) => actorData.items.filter((item) => item.type === "critical-injury")
+    });
     console.log("██████ OVERRIDES INITIALIZATION COMPLETE █████████");
 });
 Hooks.once("ready", () => {

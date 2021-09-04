@@ -21,10 +21,16 @@
     .app.window-app {
         &.masked-popout { @import 'popouts'; }
 
-        &.sheet.actor {
-            @import 'overrides/actorSheet';
-            &.actor-sheet { }
-            &.synth-sheet { }
+        &.item, &.actor.sheet {
+            @import 'overrides/sheets';
+            &.actor {
+                @import 'overrides/actorSheet';
+                &.actor-sheet { }
+                &.synth-sheet { }
+            }
+            &.critical-injury {
+                @import 'overrides/criticalInjurySheet';
+            }
         }
     }
 }

@@ -1,39 +1,4 @@
 & {
-    .window-header {
-        position: relative;
-        top: 65px;
-        display: block;
-        width: calc(100% + 8px + 2px);
-        min-height: 60px;
-        margin: -67px 0 2px;
-        background: transparent;
-
-        .window-title { display: none; }
-
-        .header-button.configure-sheet { display: none; }
-        .header-button.configure-token { display: none; }
-        .header-button.submit { display: none; }
-
-        .header-button.close {
-            display: block;
-            width: 18px;
-            height: 18px;
-            padding: 0;
-            margin: 0;
-            margin-left: calc(100% - 18px);
-            font-size: 0;
-            background: rgb(41, 162, 83);
-
-            i {
-                display: block;
-                width: 18px;
-                height: 18px;
-                font-size: 18px;
-                text-align: center;
-            }
-        }
-    }
-
     .window-content form {
         color: var(--aliengreen);
 
@@ -58,10 +23,67 @@
                         &.sp_faded > .resource-label { display: block; }
                         .xp_dots_pos { padding-top: 5px; }
                     }
+                    .crt_Item5 {
+                        .editor {
+                            overflow: hidden;
+                            pointer-events: none;
+                            .editor-content {
+                                width: 110%;
+                                margin-left: -5%;
+                            }
+                        }
+                        
+                    }
+                    .crt_Item6 {
+                        height: auto !important;
+                        padding-bottom: 3px !important;
+                    } 
                 }
             }
+
             .tab.skills {
                 .grid-container {
+                    .Col1 {
+                        .ability.grid-attr {
+                            grid-template-areas: 'Attr1 Attr2 Total Attr3';
+                            grid-template-columns: 280px 35px 20px 30px;
+
+                            .maxboxsize.Attr2 {
+                                color: var(--aliendarkergreen);
+                            }
+
+                            .skill-total {
+                                grid-area: Total;
+                                line-height: 20px;
+
+                                font: {
+                                    family: var(--alienchatfont);
+                                    size: 0.85em;
+                                }
+
+                                &.red {
+                                    color: #FFFFFF;
+                                    background-color: #7D0000;
+                                }
+
+                                &.green {
+                                    color: #FFFFFF;
+                                    background-color: #077700;
+                                }
+                            }
+                        }
+                    }
+                    .Col2 {
+                        .grid-talents {
+                            grid-template-areas: "talTitle talTitleEnd" "tal1 tal2" "tal3 tal4";
+                            .talTitle.talTitleEnd {
+                                grid-area: talTitleEnd;
+                                display: block;
+                                min-height: 1em;
+                            }
+                        }
+                    }
+
                     .Col3 {
                         color: var(--aliengreen);
                     }
