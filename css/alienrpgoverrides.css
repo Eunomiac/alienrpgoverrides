@@ -77,14 +77,88 @@
   display: none;
 }
 
-.vtt.game.system-alienrpg .chat-message .message-content .table-draw .dice-roll {
+.vtt.game.system-alienrpg .chat-message .message-content > h2,
+.vtt.game.system-alienrpg .chat-message .message-content > h4 {
   display: none;
 }
 
-.vtt.game.system-alienrpg .chat-message .message-content .table-draw .table-description {
-  display: none;
+.vtt.game.system-alienrpg .chat-message .message-content .crit-block,
+.vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block,
+.vtt.game.system-alienrpg .chat-message .message-content .xeno-attack-block {
+  display: block;
+  width: 100%;
 }
 
+.vtt.game.system-alienrpg .chat-message .message-content .crit-block .crit-name,
+.vtt.game.system-alienrpg .chat-message .message-content .crit-block .xeno-attack-name,
+.vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block .crit-name,
+.vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block .xeno-attack-name,
+.vtt.game.system-alienrpg .chat-message .message-content .xeno-attack-block .crit-name,
+.vtt.game.system-alienrpg .chat-message .message-content .xeno-attack-block .xeno-attack-name {
+  display: block;
+  width: 100%;
+  line-height: 1em;
+  color: #FF0000;
+  text-align: center;
+  border: none;
+}
+
+.vtt.game.system-alienrpg .chat-message .message-content .crit-block .crit-heal-time,
+.vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block .crit-heal-time,
+.vtt.game.system-alienrpg .chat-message .message-content .xeno-attack-block .crit-heal-time {
+  color: #00FFFF;
+}
+
+.vtt.game.system-alienrpg .chat-message .message-content .crit-block .crit-permanent,
+.vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block .crit-permanent,
+.vtt.game.system-alienrpg .chat-message .message-content .xeno-attack-block .crit-permanent {
+  color: #FF0000;
+}
+
+.vtt.game.system-alienrpg .chat-message .message-content .crit-block .crit-fatal-banner,
+.vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block .crit-fatal-banner,
+.vtt.game.system-alienrpg .chat-message .message-content .xeno-attack-block .crit-fatal-banner {
+  display: block;
+  width: 100%;
+  height: 25px;
+  line-height: 25px;
+  color: #FFFFFF;
+  text-align: center;
+  background-color: #FF0000;
+  border: none;
+  -webkit-box-shadow: 0 0 3px #FF0000, 0 0 3px #FF0000, 0 0 3px #FF0000;
+  box-shadow: 0 0 3px #FF0000, 0 0 3px #FF0000, 0 0 3px #FF0000;
+}
+
+.vtt.game.system-alienrpg .chat-message .message-content .crit-block .crit-hard-treatment,
+.vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block .crit-hard-treatment,
+.vtt.game.system-alienrpg .chat-message .message-content .xeno-attack-block .crit-hard-treatment {
+  margin-top: -5px;
+  font-size: 1.25em;
+  font-weight: bold;
+  line-height: 1.25em;
+  color: #FF0000;
+  text-align: center;
+  -webkit-transform: scaleX(1.25);
+  -ms-transform: scaleX(1.25);
+  transform: scaleX(1.25);
+}
+
+.vtt.game.system-alienrpg .chat-message .message-content .crit-block .crit-hard-treatment span,
+.vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block .crit-hard-treatment span,
+.vtt.game.system-alienrpg .chat-message .message-content .xeno-attack-block .crit-hard-treatment span {
+  font-size: 1.5em;
+  -webkit-transform: scaleX(0.2);
+  -ms-transform: scaleX(0.2);
+  transform: scaleX(0.2);
+}
+
+.vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block .crit-name {
+  color: #FFFFFF;
+}
+
+.vtt.game.system-alienrpg .chat-message .message-content .table-draw .dice-roll,
+.vtt.game.system-alienrpg .chat-message .message-content .table-draw .table-description,
 .vtt.game.system-alienrpg .chat-message .message-content .table-draw .table-results .table-result .result-image {
   display: none;
 }
@@ -254,7 +328,7 @@
 
 .vtt.game.system-alienrpg .app.window-app.item.actor .window-content form .sheet-body .tab.skills .grid-container .Col1 .ability.grid-attr, .vtt.game.system-alienrpg .app.window-app.actor.sheet.actor .window-content form .sheet-body .tab.skills .grid-container .Col1 .ability.grid-attr {
   grid-template-areas: 'Attr1 Attr2 Total Attr3';
-  grid-template-columns: 280px 35px 20px 30px;
+  grid-template-columns: 270px 35px 30px 30px;
 }
 
 .vtt.game.system-alienrpg .app.window-app.item.actor .window-content form .sheet-body .tab.skills .grid-container .Col1 .ability.grid-attr .maxboxsize.Attr2, .vtt.game.system-alienrpg .app.window-app.actor.sheet.actor .window-content form .sheet-body .tab.skills .grid-container .Col1 .ability.grid-attr .maxboxsize.Attr2 {
@@ -294,4 +368,75 @@
 
 .vtt.game.system-alienrpg .app.window-app.item.critical-injury .window-content form .sheet-body .tab.effect .resource-label, .vtt.game.system-alienrpg .app.window-app.actor.sheet.critical-injury .window-content form .sheet-body .tab.effect .resource-label {
   display: none;
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .crit-block,
+.vtt.game.system-alienrpg .app.window-app.item.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .synth-crit-block, .vtt.game.system-alienrpg .app.window-app.actor.sheet.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .crit-block,
+.vtt.game.system-alienrpg .app.window-app.actor.sheet.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .synth-crit-block {
+  display: block;
+  width: 100%;
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .crit-block .crit-name,
+.vtt.game.system-alienrpg .app.window-app.item.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .synth-crit-block .crit-name, .vtt.game.system-alienrpg .app.window-app.actor.sheet.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .crit-block .crit-name,
+.vtt.game.system-alienrpg .app.window-app.actor.sheet.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .synth-crit-block .crit-name {
+  display: block;
+  width: 100%;
+  line-height: 1em;
+  color: #FF0000;
+  text-align: center;
+  border: none;
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .crit-block .crit-heal-time,
+.vtt.game.system-alienrpg .app.window-app.item.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .synth-crit-block .crit-heal-time, .vtt.game.system-alienrpg .app.window-app.actor.sheet.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .crit-block .crit-heal-time,
+.vtt.game.system-alienrpg .app.window-app.actor.sheet.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .synth-crit-block .crit-heal-time {
+  color: #00FFFF;
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .crit-block .crit-permanent,
+.vtt.game.system-alienrpg .app.window-app.item.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .synth-crit-block .crit-permanent, .vtt.game.system-alienrpg .app.window-app.actor.sheet.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .crit-block .crit-permanent,
+.vtt.game.system-alienrpg .app.window-app.actor.sheet.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .synth-crit-block .crit-permanent {
+  color: #FF0000;
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .crit-block .crit-fatal-banner,
+.vtt.game.system-alienrpg .app.window-app.item.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .synth-crit-block .crit-fatal-banner, .vtt.game.system-alienrpg .app.window-app.actor.sheet.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .crit-block .crit-fatal-banner,
+.vtt.game.system-alienrpg .app.window-app.actor.sheet.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .synth-crit-block .crit-fatal-banner {
+  display: block;
+  width: 100%;
+  height: 25px;
+  line-height: 25px;
+  color: #FFFFFF;
+  text-align: center;
+  background-color: #FF0000;
+  border: none;
+  -webkit-box-shadow: 0 0 3px #FF0000, 0 0 3px #FF0000, 0 0 3px #FF0000;
+  box-shadow: 0 0 3px #FF0000, 0 0 3px #FF0000, 0 0 3px #FF0000;
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .crit-block .crit-hard-treatment,
+.vtt.game.system-alienrpg .app.window-app.item.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .synth-crit-block .crit-hard-treatment, .vtt.game.system-alienrpg .app.window-app.actor.sheet.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .crit-block .crit-hard-treatment,
+.vtt.game.system-alienrpg .app.window-app.actor.sheet.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .synth-crit-block .crit-hard-treatment {
+  font-size: 1.25em;
+  font-weight: bold;
+  line-height: 1.25em;
+  color: #FF0000;
+  text-align: center;
+  -webkit-transform: scaleX(1.25);
+  -ms-transform: scaleX(1.25);
+  transform: scaleX(1.25);
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .crit-block .crit-hard-treatment span,
+.vtt.game.system-alienrpg .app.window-app.item.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .synth-crit-block .crit-hard-treatment span, .vtt.game.system-alienrpg .app.window-app.actor.sheet.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .crit-block .crit-hard-treatment span,
+.vtt.game.system-alienrpg .app.window-app.actor.sheet.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .synth-crit-block .crit-hard-treatment span {
+  font-size: 1.5em;
+  -webkit-transform: scaleX(0.2);
+  -ms-transform: scaleX(0.2);
+  transform: scaleX(0.2);
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .synth-crit-block .crit-name, .vtt.game.system-alienrpg .app.window-app.actor.sheet.critical-injury .window-content form .sheet-body .tab.effect .editor .editor-content .synth-crit-block .crit-name {
+  color: #FFFFFF;
 }
