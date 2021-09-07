@@ -23,21 +23,23 @@
                         &.sp_faded > .resource-label { display: block; }
                         .xp_dots_pos { padding-top: 5px; }
                     }
+
                     .crt_Item5 {
                         .editor {
                             overflow: hidden;
                             pointer-events: none;
+
                             .editor-content {
                                 width: 110%;
                                 margin-left: -5%;
                             }
                         }
-                        
                     }
+
                     .crt_Item6 {
                         height: auto !important;
                         padding-bottom: 3px !important;
-                    } 
+                    }
                 }
             }
 
@@ -73,12 +75,14 @@
                             }
                         }
                     }
+
                     .Col2 {
                         .grid-talents {
-                            grid-template-areas: "talTitle talTitleEnd" "tal1 tal2" "tal3 tal4";
+                            grid-template-areas: 'talTitle talTitleEnd' 'tal1 tal2' 'tal3 tal4';
+
                             .talTitle.talTitleEnd {
-                                grid-area: talTitleEnd;
                                 display: block;
+                                grid-area: talTitleEnd;
                                 min-height: 1em;
                             }
                         }
@@ -89,6 +93,27 @@
                     }
                 }
             }
+        }
+    }
+}
+
+&.minimized {
+    width: 150px !important;
+    min-width: 100px !important;
+    height: 24px !important;
+    min-height: 24px !important;
+
+    .window-header {
+        min-height: unset;
+        padding: 0;
+        border: 0;
+
+        .window-title {
+            display: block !important;
+            margin-bottom: -21px;
+            margin-left: 3px;
+            line-height: 24px;
+            color: var(--aliengreen);
         }
     }
 }

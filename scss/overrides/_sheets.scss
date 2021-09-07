@@ -8,11 +8,11 @@
         margin: -67px 0 2px;
         background: transparent;
 
-        .window-title { display: none; }
+        .window-title { display: none !important; }
 
-        .header-button.configure-sheet { display: none; }
-        .header-button.configure-token { display: none; }
-        .header-button.submit { display: none; }
+        .header-button.configure-sheet { display: none !important; }
+        .header-button.configure-token { display: none !important; }
+        .header-button.submit { display: none !important; }
 
         .header-button.close {
             display: block;

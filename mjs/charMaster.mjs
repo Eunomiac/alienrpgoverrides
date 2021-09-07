@@ -44,9 +44,29 @@ const sheetTemplates = {
 };
 class alienrpgoverridesActorSheet extends aliencrtActorSheet {
     get template() { return sheetTemplates.character }
+
+    _rollCrit(event) {
+        event.preventDefault();
+        if (game.user.isGM) {
+            RE.F.lastCritRoller = this.actor;
+        } else {
+            delete RE.F.lastCritRoller;
+        }
+        super._rollCrit(event);
+    }
 }
 class alienrpgoverridesSynthActorSheet extends aliencrtSynthActorSheet {
     get template() { return sheetTemplates.synthetic }
+
+    _rollCrit(event) {
+        event.preventDefault();
+        if (game.user.isGM) {
+            RE.F.lastCritRoller = this.actor;
+        } else {
+            delete RE.F.lastCritRoller;
+        }
+        super._rollCrit(event);
+    }
 }
 // #endregion ▄▄▄▄▄ SHEET OVERRIDES ▄▄▄▄▄
 
@@ -77,13 +97,17 @@ export default (() => ({
     "~createChatMessage": (message) => {
         console.log("██████ RECEIVED CHAT MESSAGE ██████");
         console.log(message);
-        if (game?.user?.isGM && /Critical injuries table/i.test(message.data.flavor)) {
+        if (game?.user?.isGM && /Critical injuries table|Critical Injuries on Synthetics/i.test(message.data.flavor)) {
             console.log("██████ Is GM and Is Crit Injuries Table ██████");
-            const critChar = game.users.get(message.user.id)?.character;
+            const critChar = message.user.id === game.user.id
+                ? RE.F.lastCritRoller
+                : game.users.get(message.user.id)?.character;
             console.log("... Fetching Character");
             console.log(critChar);
             if (critChar) {
-                const critTable = game.tables.find((table) => table.name === "Critical injuries");
+                const critTable = game.tables.find((table) => (/Synthetics/.test(message.data.flavor)
+                    ? table.name === "Critical Injuries on Synthetics"
+                    : table.name === "Critical injuries"));
                 const critID = message.roll.total;
                 console.log(critTable, critID);
                 if (typeof critID === "number") {
