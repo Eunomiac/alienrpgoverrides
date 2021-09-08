@@ -4,6 +4,7 @@ import {alienrpgActorSheet} from "../../../systems/alienrpg/module/actor/actor-s
 import {alienrpgSynthActorSheet} from "../../../systems/alienrpg/module/actor/synth-sheet.js";
 import {aliencrtActorSheet} from "../../alien-crt-ui/module/sheet/character-sheet.js";
 import {aliencrtSynthActorSheet} from "../../alien-crt-ui/module/sheet/synth-sheet.js";
+import {ActorSheetAlienRPGVehicle} from "../../../systems/alienrpg/module/actor/vehicles.js";
 // #endregion ▮▮▮▮[IMPORTS]▮▮▮▮
 
 // #region ████████ ACTOR DATA: Getter Functions for Common Actor Data ████████ ~
@@ -40,7 +41,8 @@ const getActorData = (actor) => ({
 // #region ████████ SHEET OVERRIDES: Overriding Actor Sheet with Subclass Extension ████████ ~
 const sheetTemplates = {
     character: "modules/alienrpgoverrides/html/actor/character-sheet.html",
-    synthetic: "modules/alienrpgoverrides/html/actor/synth-sheet.html"
+    synthetic: "modules/alienrpgoverrides/html/actor/synth-sheet.html",
+    vehicles: "modules/alienrpgoverrides/html/actor/vehicles-sheet.html"
 };
 class alienrpgoverridesActorSheet extends aliencrtActorSheet {
     get template() { return sheetTemplates.character }
@@ -68,6 +70,10 @@ class alienrpgoverridesSynthActorSheet extends aliencrtSynthActorSheet {
         super._rollCrit(event);
     }
 }
+
+class alienrpgoverridesVehiclesActorSheet extends ActorSheetAlienRPGVehicle {
+    get template() { return sheetTemplates.vehicles }
+}
 // #endregion ▄▄▄▄▄ SHEET OVERRIDES ▄▄▄▄▄
 
 // #region ▮▮▮▮▮▮▮[EXPORTS]▮▮▮▮▮▮▮ ~
@@ -90,6 +96,11 @@ export default (() => ({
         Actors.unregisterSheet("alienrpg", aliencrtSynthActorSheet);
         Actors.registerSheet("alienrpg", alienrpgoverridesSynthActorSheet, {
             types: ["synthetic"],
+            makeDefault: true
+        });
+        Actors.unregisterSheet("alienrpg", ActorSheetAlienRPGVehicle);
+        Actors.registerSheet("alienrpg", alienrpgoverridesVehiclesActorSheet, {
+            types: ["vehicles"],
             makeDefault: true
         });
         console.log("██████ CHARACTER SHEET OVERRIDING COMPLETE █████████");

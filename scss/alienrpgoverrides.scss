@@ -15,6 +15,7 @@
                 @import 'overrides/actorSheet';
                 &.actor-sheet { }
                 &.synth-sheet { }
+                &.vehicles-sheet { @import 'overrides/vehiclesSheet'}
             }
 
             &.critical-injury { @import 'overrides/criticalInjurySheet' }
