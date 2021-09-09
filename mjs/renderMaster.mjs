@@ -9,8 +9,7 @@ const SPLASHDEFS = {
         options: {
             assets: [
                 "modules/alienrpgoverrides/assets/animation/bloodbursterBirth.webp",
-                // "modules/alienrpgoverrides/assets/sounds/script_bloodbursterBirth.ogg"
-                "modules/alienrpgoverrides/assets/sounds/soundboard_shipCollision.ogg"
+                "modules/alienrpgoverrides/assets/sounds/script_bloodbursterBirth.ogg"
             ],
             isBringingToTop: true,
             isPlayingSoundOnRender: ["Soundboard", "Bloodburster Birth"]
@@ -25,35 +24,7 @@ const SPLASHDEFS = {
                 "modules/alienrpgoverrides/assets/splash/travelMap.png"
             ]
         }
-    }/* ,
-    travelMap: {
-        template: "modules/alienrpgoverrides/html/landingPage/travelMap.html",
-        classes: ["masked-popout", "landing-page", "travel-map"],
-        position: {bottom: 100, left: 50, height: 600},
-        options: {
-            assets: [
-                "modules/alienrpgoverrides/assets/splash/travelMap.png"
-            ]
-        }
-    } *//* ,
-    pcFront: {
-        template: "modules/alienrpgoverrides/html/landingPage/pcFront.html",
-        classes: ["masked-popout", "landing-page", "pc-front"],
-        position: {top: 40, left: 730, height: 300, width: 500},
-        options: {}
-    },
-    pcSkills: {
-        template: "modules/alienrpgoverrides/html/landingPage/pcSkills.html",
-        classes: ["masked-popout", "landing-page", "pc-skills"],
-        position: {top: 390, left: 730, height: 300, width: 500},
-        options: {}
-    },
-    pcInventory: {
-        template: "modules/alienrpgoverrides/html/landingPage/pcInventory.html",
-        classes: ["masked-popout", "landing-page", "pc-inventory"],
-        position: {top: 740, left: 730, height: 200, width: 500},
-        options: {}
-    } */
+    }
 };
 
 const getPositioning = ({height, width, padding, aspectRatio}) => {
@@ -159,11 +130,14 @@ class SplashElement {
 
     async render() {
         if (this._element) {
-            await this._element.render(true, {top: this._top, left: this._left, height: this._height, width: this._width, focus: true});
+            await this._element.render(true, {
+                top: this._top,
+                left: this._left,
+                height: this._height,
+                width: this._width,
+                focus: true
+            });
             if (this._isPlayingSoundOnRender) {
-                console.log("*** *** *** RENDERING *** *** ***");
-                console.log(this.playlist);
-                console.log(this.playlistSound);
                 this.playlist?.playSound(this.playlistSound);
             }
             if (this._isBringingToTop) {
@@ -189,7 +163,7 @@ export default (() => ({
             SplashElement.All[id] = new SplashElement(id, position);
         }
     },
-    "~canvasReady": () => ["scenarioIntro", "travelMap", "pcFront", "pcSkills", "pcInventory"].forEach((id) => {
+    "~canvasReady": () => ["scenarioIntro"].forEach((id) => {
         console.log(`[CANVAS READY] Preparing ${id}...`);
         if (RE.F.scenes[canvas.scene.name]?.isLandingPage) {
             console.log(`[CANVAS READY] ... RENDERING ${id}`);
