@@ -15,8 +15,11 @@ import renderMasterHooks, {
 import lightMasterHooks from "./lightMaster.mjs";
 import charMasterHooks, {
     templates as charMasterTemplates,
-    getActorData
+    assignActor
 } from "./charMaster.mjs";
+import itemMasterHooks, {
+    templates as itemMasterTemplates
+} from "./itemMaster.mjs";
 // #endregion ░░░░[SCRIPTS]░░░░
 // #endregion ▒▒▒▒[IMPORTS]▒▒▒▒
 
@@ -1167,7 +1170,8 @@ const SVGDATA = {
     viewMasterHooks,
     renderMasterHooks,
     lightMasterHooks,
-    charMasterHooks
+    charMasterHooks,
+    itemMasterHooks
 ].forEach((hooks) => Object.entries(hooks) // Namespace each hook with a prefix, unless hook begins with tilde ('~')
     .forEach(([hook, func]) => Hooks.on(`ARPGO_${hook}`.replace(/(ARPGO_)?~/, ""), func)));
 
@@ -1191,17 +1195,6 @@ Hooks.once("init", async () => {
             "USCSS Cronus - Deck C": {isResettingViewOnActivate: true, ship: "Cronus", deck: 3},
             "USCSS Cronus - Deck D": {isResettingViewOnActivate: true, ship: "Cronus", deck: 4}
         },
-        players: {
-            /*DEVCODE*/
-            "Game Mother": {charName: "Euno", color: "#ff0000"},
-            /*!DEVCODE*/
-            "Brett": {charName: "Davis", color: "#eff24d"},
-            "Dusty": {charName: "Cham", color: "#f2cb4d"},
-            "J.Rook": {charName: "Rye", color: "#b4ae05"},
-            "ParanoidAndroid": {charName: "Wilson", color: "#9e7f00"},
-            "Thaum": {charName: "Miller", color: "#f28f4d"},
-            "Euno": {charName: "Euno", color: "#ff0000"}
-        },
         call: (hook, ...args) => {
             game.socket.emit("module.alienrpgoverrides", [`ARPGO_${hook}`, ...args]);
         },
@@ -1210,20 +1203,31 @@ Hooks.once("init", async () => {
             RE.F.call(hook, ...args);
         },
         setLights: (...args) => RE.F.callGM("setLights", ...args),
+        setSounds: (...args) => RE.F.callGM("setSounds", ...args),
+        assignActor,
         toggleLights: (...args) => RE.F.callGM("toggleLights", ...args),
         toggleDarkness: () => RE.F.call("toggleDarkness"),
         resetSceneView: () => RE.F.call("forceView", "initial"),
-        preloadBirth: () => RE.F.call("preloadSplashElement", "bloodbursterBirth"),
-        loadBirth: () => RE.F.call("renderSplashElement", "bloodbursterBirth"),
-        closeBirth: () => RE.F.call("closeSplashElement", "bloodbursterBirth")
+        preloadBirth: () => RE.F.callGM("preloadSplashElement", "bloodbursterBirth"),
+        loadBirth: () => RE.F.callGM("renderSplashElement", "bloodbursterBirth"),
+        closeBirth: () => RE.F.callGM("closeSplashElement", "bloodbursterBirth")
     };
     loadTemplates([
         ...renderMasterTemplates,
-        ...charMasterTemplates
+        ...charMasterTemplates,
+        ...itemMasterTemplates
     ]);
     Handlebars.registerHelper({
         mergeDicePools: (actorData) => {
             const {attributes, skills} = actorData;
+            for (const [attrName, attrData] of Object.entries(attributes)) {
+                actorData.attributes[attrName] = {
+                    ...attrData,
+                    hasNegMod: attrData.value > attrData.mod,
+                    hasPosMod: attrData.value < attrData.mod,
+                    floorTotal: Math.max(attrData.mod, 0)
+                };
+            }
             for (const [skillName, skillData] of Object.entries(skills)) {
                 actorData.skills[skillName] = {
                     ...skillData,
@@ -1238,40 +1242,10 @@ Hooks.once("init", async () => {
     });
     console.log("██████ OVERRIDES INITIALIZATION COMPLETE █████████");
 });
-Hooks.once("ready", () => {
-    console.log("██████ READYING ALIEN RPG OVERRIDES ... ██████");
-    game.users.forEach((user) => {
-        const {id, data: {name}} = user;
-        if (name in RE.F.players) {
-            RE.F.players[name].user = user;
-            RE.F.players[name].char = game.actors.find((actor) => new RegExp(RE.F.players[name].charName, "ui").test(actor.name));
-        }
-    });
-    if (game.user.isGM) {
-        game.users.forEach((user) => {
-            if (user.data.name in RE.F.players && !user.data.flags?.alienrpgoverrides?.isSetup) {
-                const {char, charName, color} = RE.F.players[user.data.name];
-                const updateData = {
-                    "avatar": `modules/alienrpgoverrides/assets/characters/${charName.toLowerCase()}.webp`,
-                    "character": char.id,
-                    color,
-                    "flag.alienrpgoverrides.isSetup": false
-                };
-                /*DEVCODE*/
-                if (charName === "Euno") {
-                    updateData.avatar = "modules/alienrpgoverrides/assets/characters/cham.webp";
-                }
-                /*!DEVCODE*/
-                user.update(updateData);
-            }
-        });
-    }
-    console.log("██████ OVERRIDES READYING COMPLETE █████████");
-});
 Hooks.on("ready", () => {
     if (RE.F.scenes[canvas.scene.name]?.isLandingPage) {
-        RE.F.players[game.user.data.name]?.char.sheet.close(true).then(() => {
-            RE.F.players[game.user.data.name]?.char.sheet.render(true, {left: 100, top: 50});
+        game.user.character?.sheet?.close(true).then(() => {
+            game.user.character?.sheet?.render(true, {left: 100, top: 50});
         });
     }
 });

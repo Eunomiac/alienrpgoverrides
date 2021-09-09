@@ -1,5 +1,21 @@
 import {RE} from "./utils.mjs";
 
+const parseLightAdjustmentData = (light, upData) => {
+    const updateData = {...upData};
+    if (light) {
+        for (const [key, val] of Object.entries({...upData})) {
+            if (/%$/.test(key)) {
+                const realKey = key.slice(0, -1);
+                const curValue = light.data[realKey];
+                const newValue = curValue * val;
+                updateData[realKey] = newValue;
+                delete updateData[key];
+            }
+        }
+    }
+    return updateData;
+};
+
 const parseLightUpdateData = (groupRef, upData) => {
     const updateData = [];
     if (typeof groupRef === "object") {
@@ -9,7 +25,21 @@ const parseLightUpdateData = (groupRef, upData) => {
     } else {
         const regExpTest = new RegExp(groupRef, "ui");
         updateData.push(...canvas.scene.lights.filter((light) => regExpTest.test(light.data.flags?.alienrpgoverrides?.group))
-            .map((light) => ({_id: light.id, ...upData})));
+            .map((light) => ({_id: light.id, ...parseLightAdjustmentData(light, upData)})));
+    }
+    return updateData;
+};
+
+const parseSoundUpdateData = (soundName, upData) => {
+    const updateData = [];
+    if (typeof soundName === "object") {
+        for (const [sName, uData] of Object.entries(soundName)) {
+            updateData.push(...parseSoundUpdateData(sName, uData));
+        }
+    } else {
+        const regExpTest = new RegExp(soundName, "ui");
+        updateData.push(...canvas.scene.sounds.filter((sound) => regExpTest.test(sound.data.path))
+            .map((sound) => ({_id: sound.id, ...upData})));
     }
     return updateData;
 };
@@ -42,6 +72,12 @@ export default (() => ({
     setLights: async (groupRef, updateData) => {
         if (game.user.isGM) {
             return canvas.scene.updateEmbeddedDocuments("AmbientLight", parseLightUpdateData(groupRef, updateData));
+        }
+        return false;
+    },
+    setSounds: async (soundName, updateData) => {
+        if (game.user.isGM) {
+            return canvas.scene.updateEmbeddedDocuments("AmbientSound", parseSoundUpdateData(soundName, updateData));
         }
         return false;
     }

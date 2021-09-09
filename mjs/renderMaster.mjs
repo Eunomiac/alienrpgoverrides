@@ -1,4 +1,4 @@
-import {RE, getUserChar} from "./utils.mjs";
+import {RE} from "./utils.mjs";
 import {getActorData} from "./charMaster.mjs";
 
 const SPLASHDEFS = {
@@ -9,9 +9,11 @@ const SPLASHDEFS = {
         options: {
             assets: [
                 "modules/alienrpgoverrides/assets/animation/bloodbursterBirth.webp",
-                "modules/alienrpgoverrides/assets/sounds/script_bloodbursterBirth.ogg"
+                // "modules/alienrpgoverrides/assets/sounds/script_bloodbursterBirth.ogg"
+                "modules/alienrpgoverrides/assets/sounds/soundboard_shipCollision.ogg"
             ],
-            isBringingToTop: true
+            isBringingToTop: true,
+            isPlayingSoundOnRender: ["Soundboard", "Bloodburster Birth"]
         }
     },
     scenarioIntro: {
@@ -130,6 +132,14 @@ class SplashElement {
     parseOptions() {
         this._assets = this._options.assets ?? false;
         this._isBringingToTop = this._options.isBringingToTop ?? false;
+        this._isPlayingSoundOnRender = Boolean(this._options.isPlayingSoundOnRender ?? false);
+    }
+
+    get playlist() {
+        return (this._playlist = this._playlist ?? game.playlists.find((playlist) => playlist.name === this._options.isPlayingSoundOnRender[0]));
+    }
+    get playlistSound() {
+        return (this._playlistSound = this._playlistSound ?? this._playlist?.sounds.find((sound) => sound.name === this._options.isPlayingSoundOnRender[1]));
     }
 
     create() {
@@ -150,6 +160,12 @@ class SplashElement {
     async render() {
         if (this._element) {
             await this._element.render(true, {top: this._top, left: this._left, height: this._height, width: this._width, focus: true});
+            if (this._isPlayingSoundOnRender) {
+                console.log("*** *** *** RENDERING *** *** ***");
+                console.log(this.playlist);
+                console.log(this.playlistSound);
+                this.playlist?.playSound(this.playlistSound);
+            }
             if (this._isBringingToTop) {
                 this._element.bringToTop();
             }

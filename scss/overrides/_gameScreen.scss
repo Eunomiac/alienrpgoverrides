@@ -30,7 +30,16 @@
 }
 
 #notifications {
-    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: stretch;
+    pointer-events: none;
+    transform: scale(0.7);
+    transform-origin: right bottom;
+
+    .error { display: none !important; }
 }
 
 #sidebar { }

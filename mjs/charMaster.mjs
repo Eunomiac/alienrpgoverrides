@@ -1,5 +1,6 @@
 // #region ▮▮▮▮▮▮▮[IMPORTS]▮▮▮▮▮▮▮ ~
 import {RE} from "./utils.mjs";
+import {alienrpgActor} from "../../../systems/alienrpg/module/actor/actor.js";
 import {alienrpgActorSheet} from "../../../systems/alienrpg/module/actor/actor-sheet.js";
 import {alienrpgSynthActorSheet} from "../../../systems/alienrpg/module/actor/synth-sheet.js";
 import {aliencrtActorSheet} from "../../alien-crt-ui/module/sheet/character-sheet.js";
@@ -38,11 +39,68 @@ const getActorData = (actor) => ({
 });
 // #endregion ▄▄▄▄▄ ACTOR DATA ▄▄▄▄▄
 
+// #region ████████ ACTOR ASSIGNMENT: Assigning Actors to Users ████████ ~
+const assignActor = async (actorRef, userRef) => {
+    // Find the Actor
+    if (typeof actorRef === "string") {
+        if (game.actors.get(actorRef)) {
+            actorRef = game.actors.get(actorRef);
+        } else {
+            const regExpTest = new RegExp(actorRef.toLowerCase().replace(/[^a-z0-9]/g, ""));
+            actorRef = game.actors.find((actor) => regExpTest.test(actor.name.toLowerCase().replace(/[^a-z0-9]/g, "")));
+        }
+    }
+    if (!(actorRef instanceof alienrpgActor)) {
+        throw new Error(`Unknown Actor Reference: '${JSON.stringify(actorRef)}'`);
+        return false;
+    }
+    // Find the User
+    if (typeof userRef === "string") {
+        if (game.users.get(userRef)) {
+            userRef = game.users.get(userRef);
+        } else {
+            const regExpTest = new RegExp(userRef.toLowerCase().replace(/[^a-z0-9]/g, ""));
+            userRef = game.users.find((user) => regExpTest.test(user.name.toLowerCase().replace(/[^a-z0-9]/g, "")));
+        }
+    }
+    if (!(userRef instanceof User)) {
+        throw new Error(`Unknown User Reference: '${JSON.stringify(userRef)}'`);
+        return false;
+    }
+    // Update the user's old character by removing permissions
+    const formerActor = userRef.character;
+    if (formerActor) {
+        const {permission} = formerActor.data;
+        delete permission[userRef.id];
+        await userRef.character.update({permission});
+    }
+
+    userRef.character?.update({});
+    // Update the user's character and avatar data.
+    await userRef.update({
+        avatar: actorRef.data.img,
+        character: actorRef.id
+    });
+    // Update the user's new character by removing any other owner permissions and setting them as owner
+    const permission = {};
+    for (const [pKey, pVal] of Object.entries(actorRef.data.permission)) {
+        if (pKey === "default" || pVal !== 3) {
+            permission[pKey] = pVal;
+        }
+    }
+    permission[userRef.id] = 3;
+    await actorRef.update({permission});
+    console.log(`Actor '${actorRef.name}' assigned to User '${userRef.name}'`);
+    return true;
+};
+// #endregion ▄▄▄▄▄ ACTOR ASSIGNMENT ▄▄▄▄▄
+
 // #region ████████ SHEET OVERRIDES: Overriding Actor Sheet with Subclass Extension ████████ ~
 const sheetTemplates = {
     character: "modules/alienrpgoverrides/html/actor/character-sheet.html",
     synthetic: "modules/alienrpgoverrides/html/actor/synth-sheet.html",
-    vehicles: "modules/alienrpgoverrides/html/actor/vehicles-sheet.html"
+    vehicles: "modules/alienrpgoverrides/html/actor/vehicles-sheet.html",
+    tab_inventory: "modules/alienrpgoverrides/html/actor/tabs/actor-inventory.html"
 };
 class alienrpgoverridesActorSheet extends aliencrtActorSheet {
     get template() { return sheetTemplates.character }
@@ -80,6 +138,7 @@ class alienrpgoverridesVehiclesActorSheet extends ActorSheetAlienRPGVehicle {
 const templates = Object.values(sheetTemplates);
 export {
     getActorData,
+    assignActor,
     templates
 };
 

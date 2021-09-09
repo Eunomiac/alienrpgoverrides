@@ -41,7 +41,29 @@
 }
 
 .vtt.game.system-alienrpg #notifications {
-  top: 0;
+  right: 0;
+  bottom: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+  -ms-flex-direction: column-reverse;
+  flex-direction: column-reverse;
+  -webkit-box-pack: stretch;
+  -ms-flex-pack: stretch;
+  justify-content: stretch;
+  pointer-events: none;
+  -webkit-transform: scale(0.7);
+  -ms-transform: scale(0.7);
+  transform: scale(0.7);
+  -webkit-transform-origin: right bottom;
+  -ms-transform-origin: right bottom;
+  transform-origin: right bottom;
+}
+
+.vtt.game.system-alienrpg #notifications .error {
+  display: none !important;
 }
 
 .vtt.game.system-alienrpg #players {
@@ -285,6 +307,47 @@
 .vtt.game.system-alienrpg .app.window-app.actor.sheet.actor .window-content form select,
 .vtt.game.system-alienrpg .app.window-app.actor.sheet.actor .window-content form .select-css {
   color: var(--aliengreen);
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att, .vtt.game.system-alienrpg .app.window-app.actor.sheet.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att {
+  grid-template-areas: 'gCol1 gCol2 gCol2-5 gCol3 gCol4 gCol4-5 gCol5 gCol6' 'gCol7 gCol8 gCol8-5 gCol9 gCol10 gCol10-5 gCol11 gCol12';
+  grid-template-columns: 23% 4% 6% 23% 4% 6% 25% 8%;
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att .gCol2-5, .vtt.game.system-alienrpg .app.window-app.actor.sheet.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att .gCol2-5 {
+  grid-area: gCol2-5;
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att .gCol4-5, .vtt.game.system-alienrpg .app.window-app.actor.sheet.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att .gCol4-5 {
+  grid-area: gCol4-5;
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att .gCol8-5, .vtt.game.system-alienrpg .app.window-app.actor.sheet.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att .gCol8-5 {
+  grid-area: gCol8-5;
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att .gCol10-5, .vtt.game.system-alienrpg .app.window-app.actor.sheet.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att .gCol10-5 {
+  grid-area: gCol10-5;
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att .maxboxsize, .vtt.game.system-alienrpg .app.window-app.actor.sheet.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att .maxboxsize {
+  color: var(--aliendarkergreen);
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att .attribute-total, .vtt.game.system-alienrpg .app.window-app.actor.sheet.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att .attribute-total {
+  line-height: 22px;
+  font-family: var(--alienchatfont);
+  font-size: 1.5em;
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att .attribute-total.red, .vtt.game.system-alienrpg .app.window-app.actor.sheet.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att .attribute-total.red {
+  color: #FFFFFF;
+  background-color: #7D0000;
+}
+
+.vtt.game.system-alienrpg .app.window-app.item.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att .attribute-total.green, .vtt.game.system-alienrpg .app.window-app.actor.sheet.actor .window-content form .actor-header .header-fields .crt-grid-Char-Att .attribute-total.green {
+  color: #FFFFFF;
+  background-color: #077700;
 }
 
 .vtt.game.system-alienrpg .app.window-app.item.actor .window-content form .sheet-body .tab.general .grid-crtPage .dots.experience, .vtt.game.system-alienrpg .app.window-app.actor.sheet.actor .window-content form .sheet-body .tab.general .grid-crtPage .dots.experience {

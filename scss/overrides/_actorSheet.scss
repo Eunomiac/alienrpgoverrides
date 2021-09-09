@@ -10,6 +10,46 @@
         select,
         .select-css { color: var(--aliengreen); }
 
+        .actor-header {
+            .header-fields {
+                .crt-grid-Char-Att {
+                    grid-template-areas:
+                        'gCol1 gCol2 gCol2-5 gCol3 gCol4 gCol4-5 gCol5 gCol6'
+                        'gCol7 gCol8 gCol8-5 gCol9 gCol10 gCol10-5 gCol11 gCol12';
+                    grid-template-columns: 23% 4% 6% 23% 4% 6% 25% 8%;
+
+                    .gCol2-5 { grid-area: gCol2-5 }
+                    .gCol4-5 { grid-area: gCol4-5 }
+                    .gCol8-5 { grid-area: gCol8-5 }
+                    .gCol10-5 { grid-area: gCol10-5 }
+
+                    
+                    .maxboxsize {
+                        color: var(--aliendarkergreen);
+                    }
+
+                    .attribute-total {
+                        line-height: 22px;
+
+                        font: {
+                            family: var(--alienchatfont);
+                            size: 1.5em;
+                        }
+
+                        &.red {
+                            color: #FFFFFF;
+                            background-color: #7D0000;
+                        }
+
+                        &.green {
+                            color: #FFFFFF;
+                            background-color: #077700;
+                        }
+                    }
+                }
+            }
+        }
+
         .sheet-body {
             .tab.general {
                 .grid-crtPage {

@@ -1,3 +1,4 @@
+{{mergeDicePools data}}
 <form class="{{cssClass}}" autocomplete="off">
 	{{!-- Sheet Header --}}
 	<header class="actor-header">
@@ -24,18 +25,22 @@
 					
 					<h3 class="resource-label rollable gCol1" data-attr="attribute" data-roll="{{data.attributes.str.value}}" data-mod="{{data.attributes.str.mod}}" data-label="{{data.attributes.str.label}}">{{localize "ALIENRPG.AbilityStr"}}</h3>
 					<input type="text" class="maxboxsize gCol2" name="data.attributes.str.value" value="{{data.attributes.str.value}}" data-dtype="Number" />
+					<span class="attribute-total gCol2-5 {{#if data.attributes.str.hasNegMod}}red{{/if}}{{#if data.attributes.str.hasPosMod}}green{{/if}}">▸{{data.attributes.str.floorTotal}}</span>
 					
 					<h3 class="resource-label rollable gCol3" data-attr="attribute" data-roll="{{data.attributes.wit.value}}" data-mod="{{data.attributes.wit.mod}}"  data-label="{{data.attributes.wit.label}}">{{localize "ALIENRPG.AbilityWit"}}</h3>
 					<input type="text" class="maxboxsize gCol4" name="data.attributes.wit.value" value="{{data.attributes.wit.value}}" data-dtype="Number" />
+					<span class="attribute-total gCol4-5 {{#if data.attributes.wit.hasNegMod}}red{{/if}}{{#if data.attributes.wit.hasPosMod}}green{{/if}}">▸{{data.attributes.wit.floorTotal}}</span>
 					
 					<h3 class="resource-label rollable gCol5" data-roll="{{data.general.armor.value}}" data-spbutt="armor">{{ localize "ALIENRPG.Armor"}}  </h3>
 					<input type="text" class="maxboxsize gCol6" name="data.general.armor.value"  value="{{data.general.armor.value}}" data-dtype="Number" disabled />
 					
 					<h3 class="resource-label rollable gCol7" data-attr="attribute" data-roll="{{data.attributes.agl.value}}"  data-mod="{{data.attributes.agl.mod}}" data-label="{{data.attributes.agl.label}}">{{localize "ALIENRPG.AbilityAgl"}}</h3>
 					<input type="text" class="maxboxsize gCol8" name="data.attributes.agl.value" value="{{data.attributes.agl.value}}" data-dtype="Number" />
+					<span class="attribute-total gCol8-5 {{#if data.attributes.agl.hasNegMod}}red{{/if}}{{#if data.attributes.agl.hasPosMod}}green{{/if}}">▸{{data.attributes.agl.floorTotal}}</span>
 					
 					<h3 class="resource-label rollable gCol9" data-attr="attribute"  data-roll="{{data.attributes.emp.value}}"  data-mod="{{data.attributes.emp.mod}}" data-label="{{data.attributes.emp.label}}">{{localize "ALIENRPG.AbilityEmp"}}</h3>
 					<input type="text" class="maxboxsize gCol10" name="data.attributes.emp.value" value="{{data.attributes.emp.value}}" data-dtype="Number" />
+					<span class="attribute-total gCol10-5 {{#if data.attributes.emp.hasNegMod}}red{{/if}}{{#if data.attributes.emp.hasPosMod}}green{{/if}}">▸{{data.attributes.emp.floorTotal}}</span>
 					
 					{{#if isGM}}
 					<h3 class="resource-label gCol11" >{{localize "ALIENRPG.NPC"}}</h3>
@@ -64,7 +69,6 @@
 					<div class="grid-container ">
 						<!-- Col1 -->
 						<span class="Col1">
-							{{mergeDicePools data}}
 							{{#each data.skills as |skill key|}}
 							<span class="ability grid-attr">
 								<h3 for="data.skills.{{key}}.value" class="resource-label rollable Attr1" data-roll="{{skill.mod}}"  data-label="{{skill.label}}">{{skill.label}}  ({{skill.ability}})</h3>
@@ -131,7 +135,7 @@
 				<div class="tab biog " data-group="primary" data-tab="description">{{editor content=data.notes target="data.notes" button=true owner=owner editable=editable}}</div>
 				{{!-- Owned Items Tab --}}
 				<!-- INVENTORY -->
-				<div class="tab inventory" data-group="primary" data-tab="inventory">{{> "systems/alienrpg/templates/actor/tabs/actor-inventory.html" sections=inventory}}</div>
+				<div class="tab inventory" data-group="primary" data-tab="inventory">{{> "modules/alienrpgoverrides/html/actor/tabs/actor-inventory.html" sections=inventory}}</div>
 				
 				
 				
