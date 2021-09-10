@@ -1190,6 +1190,7 @@ Hooks.once("init", async () => {
         scenes: {
             "Alien: Chariot of the Gods": {isResettingViewOnActivate: true, isLandingPage: true},
             "USCSS Montero - Deck A": {isResettingViewOnActivate: true, ship: "Montero", deck: 1},
+            "USCSS Cronus - Exterior": {isResettingViewOnActivate: true, ship: "Cronus", deck: 0},
             "USCSS Cronus - Deck A": {isResettingViewOnActivate: true, ship: "Cronus", deck: 1},
             "USCSS Cronus - Deck B": {isResettingViewOnActivate: true, ship: "Cronus", deck: 2},
             "USCSS Cronus - Deck C": {isResettingViewOnActivate: true, ship: "Cronus", deck: 3},
@@ -1210,7 +1211,10 @@ Hooks.once("init", async () => {
         resetSceneView: () => RE.F.call("forceView", "initial"),
         preloadBirth: () => RE.F.callGM("preloadSplashElement", "bloodbursterBirth"),
         loadBirth: () => RE.F.callGM("renderSplashElement", "bloodbursterBirth"),
-        closeBirth: () => RE.F.callGM("closeSplashElement", "bloodbursterBirth")
+        closeBirth: () => RE.F.callGM("closeSplashElement", "bloodbursterBirth"),
+        preloadDeviation: () => RE.F.callGM("preloadSplashElement", "deviationAlert"),
+        loadDeviation: () => RE.F.callGM("renderSplashElement", "deviationAlert"),
+        closeDeviation: () => RE.F.callGM("closeSplashElement", "deviationAlert")
     };
     loadTemplates([
         ...renderMasterTemplates,

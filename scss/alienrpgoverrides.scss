@@ -7,6 +7,8 @@
 
         &.masked-popout { @import 'popouts' }
 
+        &.journal-sheet { @import 'overrides/journalSheet' }
+
         &.item,
         &.actor.sheet {
             @import 'overrides/sheets';

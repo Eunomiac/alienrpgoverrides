@@ -24,6 +24,16 @@ const SPLASHDEFS = {
                 "modules/alienrpgoverrides/assets/splash/travelMap.png"
             ]
         }
+    },
+    deviationAlert: {
+        template: "modules/alienrpgoverrides/html/splash/deviationReport.html",
+        classes: ["masked-popout", "deviation-report"],
+        get position() { return getPositioning({padding: 0.5, aspectRatio: 900 / 575}) },
+        options: {
+            assets: [
+                "modules/alienrpgoverrides/assets/splash/deviation-map.webp"
+            ]
+        }
     }
 };
 
@@ -32,6 +42,12 @@ const getPositioning = ({height, width, padding, aspectRatio}) => {
         if (padding) {
             return getPositioning({padding, aspectRatio: width / height});
         }
+        console.log(`Final Get Position Return: ${JSON.stringify({
+            top: 0.5 * (window.innerHeight - height),
+            left: 0.5 * (window.innerWidth - width),
+            height,
+            width
+        })}`);
         return {
             top: 0.5 * (window.innerHeight - height),
             left: 0.5 * (window.innerWidth - width),
