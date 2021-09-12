@@ -1,0 +1,15 @@
+& {
+    .combatant-action-box {
+        position: relative;
+        max-width: 48px;
+        margin-right: -48px;
+
+        .alienrpgoverrides-button {
+            display: block;
+            height: 50%;
+
+            &.fast-action-toggle[data-is-used='1'] { background-color: rgba(255, 0, 0, 0.5) }
+            &.slow-action-toggle[data-is-used='1'] { background-color: rgba(0, 0, 255, 0.5) }
+        }
+    }
+}

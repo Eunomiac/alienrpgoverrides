@@ -137,23 +137,9 @@
     }
 }
 
-&.minimized {
-    width: 150px !important;
-    min-width: 100px !important;
-    height: 24px !important;
-    min-height: 24px !important;
-
-    .window-header {
-        min-height: unset;
-        padding: 0;
-        border: 0;
-
-        .window-title {
-            display: block !important;
-            margin-bottom: -21px;
-            margin-left: 3px;
-            line-height: 24px;
-            color: var(--aliengreen);
-        }
-    }
+&.minimized { 
+    --minimizedTextColor: #262000;
+    --minimizedFontWeight: bold;
+    --minimizedBGColor: #FFD900;
+    --minimizedBorderColor: #FFFFFF;
 }

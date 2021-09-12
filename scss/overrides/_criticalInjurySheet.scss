@@ -65,3 +65,10 @@
         }
     }
 }
+
+&.minimized { 
+    --minimizedTextColor: #FFFFFF;
+    --minimizedFontWeight: bold;
+    --minimizedBGColor: #880000;
+    --minimizedBorderColor: #FF0000;
+}

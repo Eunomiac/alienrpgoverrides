@@ -7,20 +7,23 @@
 
         &.masked-popout { @import 'popouts' }
 
-        &.journal-sheet { @import 'overrides/journalSheet' }
-
-        &.item,
-        &.actor.sheet {
+        &.sheet {
             @import 'overrides/sheets';
 
             &.actor {
-                @import 'overrides/actorSheet';
-                &.actor-sheet { }
-                &.synth-sheet { }
-                &.vehicles-sheet { @import 'overrides/vehiclesSheet'}
+                @import 'overrides/characterSheet';
+                // &.actor-sheet { }
+                &.synth-sheet { @import 'overrides/synthSheet' }
+                &.vehicles-sheet { @import 'overrides/vehiclesSheet' }
             }
 
+            &.item { @import 'overrides/itemSheet' }
+
             &.critical-injury { @import 'overrides/criticalInjurySheet' }
+
+            &.journal-sheet { @import 'overrides/journalSheet' }
         }
     }
+
+    #combat-tracker { @import 'overrides/combatTracker' }
 }

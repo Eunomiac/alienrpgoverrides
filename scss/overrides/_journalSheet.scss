@@ -1,3 +1,27 @@
-& {
-    width: 972px !important;
+&:not(.minimized) {
+    --width: 972px !important;
+    --minimumWidth: 972px !important;
+
+    .window-header {
+        .header-button {
+            &.share-image {
+                i {
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+
+    .window-content {
+        padding: 0;
+
+        form {
+            padding: 0 5px 0 0;
+
+            .editor { height: calc(100% - 35px); }
+        }
+
+        input[name='name'],
+        select[name='folder'] { display: none !important; }
+    }
 }

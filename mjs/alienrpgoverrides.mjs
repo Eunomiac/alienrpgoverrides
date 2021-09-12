@@ -9,6 +9,7 @@ import {RE} from "./utils.mjs";
 // #endregion ░░░░[UTILITIES]░░░░
 // #region ░░░░░░░[SCRIPTS]░░░░ Companion Script Hooks & Templates for Registration & Preloading ░░░░░░░ ~
 import viewMasterHooks from "./viewMaster.mjs";
+import combatMasterHooks from "./combatMaster.mjs";
 import renderMasterHooks, {
     templates as renderMasterTemplates
 } from "./renderMaster.mjs";
@@ -1168,6 +1169,7 @@ const SVGDATA = {
 // Register Hooks from imported scripts
 [
     viewMasterHooks,
+    combatMasterHooks,
     renderMasterHooks,
     lightMasterHooks,
     charMasterHooks,

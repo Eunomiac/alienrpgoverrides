@@ -1,5 +1,4 @@
 /* stylelint-disable selector-max-id -- References to underlying Foundry elements */
-/* stylelint-disable block-no-empty -- Placeholders to preserve HTML layout structure */
 
 #logo { display: none; }
 
@@ -20,7 +19,7 @@
     }
 }
 
-#loading { }
+// #loading { }
 
 #controls {
     top: -5px;
@@ -42,7 +41,7 @@
     .error { display: none !important; }
 }
 
-#sidebar { }
+// #sidebar { }
 
 #players {
     left: 0;
@@ -59,9 +58,9 @@
     transform-origin: left bottom;
 }
 
-#hud { }
+// #hud { }
 
-#board { }
+// #board { }
 
 #pause {
     bottom: 80px;
