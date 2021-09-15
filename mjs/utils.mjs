@@ -3,4 +3,15 @@ const RE = {
     set F(v) { game.alienrpgoverrides = v }
 };
 
-export {RE}; /* eslint-disable-line import/prefer-default-export */
+const Cycle = (arr, curIndex, deltaIndex = 1) => {
+    curIndex += deltaIndex;
+    while (curIndex >= arr.length) {
+        curIndex -= arr.length;
+    }
+    while (curIndex < 0) {
+        curIndex += arr.length;
+    }
+    return arr[curIndex];
+};
+
+export {RE, Cycle};

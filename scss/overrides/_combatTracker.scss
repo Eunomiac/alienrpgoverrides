@@ -1,15 +1,34 @@
 & {
     .combatant-action-box {
         position: relative;
-        max-width: 48px;
-        margin-right: -48px;
+        max-width: 20px;
+        margin-right: -10px;
 
         .alienrpgoverrides-button {
             display: block;
             height: 50%;
 
-            &.fast-action-toggle[data-is-used='1'] { background-color: rgba(255, 0, 0, 0.5) }
-            &.slow-action-toggle[data-is-used='1'] { background-color: rgba(0, 0, 255, 0.5) }
+            img { pointer-events: none; }
+        }
+    }
+
+    .combatant.directory-item {
+        .combatant-control {
+            &.switch-initiative {
+                // color: var(--aliengreen);
+                // order: 10;
+
+                &.switch-active { color: #FFDD00 }
+                &.switch-active.switcher { color: var(--aliengreen) }
+            }
+
+            &.cycle-button {
+                order: 9;
+
+                &.prone {
+                    i { transform: rotate(90deg); }
+                }
+            }
         }
     }
 }

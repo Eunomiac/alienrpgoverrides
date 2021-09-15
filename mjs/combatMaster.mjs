@@ -1,87 +1,52 @@
-/* eslint-disable */
-const alienModuleExample = () => {
-    Hooks.on("renderCombatTracker", (app, html, user) => {
-        const effectIcons = html.find(".token-effect");
-        effectIcons.each(function(i) {
-            const rawPath = this.getAttribute("src");
+import {RE, Cycle} from "./utils.mjs";
 
-            const combatantId = $(this).closest(".combatant").data("combatant-id");
-            const combatant = game.combat?.combatants?.get(combatantId);
-            const effect = combatant?.actor?.data?.effects?.find((e) => e.data.icon === rawPath);
-            if (effect) {
-                // Active effects based effect label
-                this.title = effect.data.label;
-            } else {
-                // Legacy filename based effect name
-                const strippedPath = stripQueryStringFromUrl(rawPath);
-                const name = getFilenameFromUrl(strippedPath);
-                this.title = toTitleCase(name);
-            }
-        });
-    });
-
-    function stripQueryStringFromUrl(url) {
-        return url.split("#")[0].split("?")[0];
-    }
-
-    // url must not have query strings!
-    function getFilenameFromUrl(url) {
-        return url.split("/").pop().split(".").splice(0, 1)
-            .join(" ");
-    }
-
-    function toTitleCase(str) {
-        const words = str.toLowerCase().split(/[ \-_.]/);
-        return words
-            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ");
-    }
+const ICONCLASSES = {
+    stance: [
+        ["Ready", "", "male"],
+        ["Prone", "prone", "running"],
+        ["Grappling", "grappling", "handshake"]
+    ],
+    readying: [
+        ["None", "", "circle-notch"],
+        ["Aiming", "aiming", "bullseye"],
+        ["Overwatch", "overwatch", "wifi"],
+        ["Helping", "helping", "people-carry"]
+    ],
+    status: [
+        ["All Good!", "", "circle-notch"],
+        ["Panicked!", "panicked", "surprise"],
+        ["On Fire!", "on-fire", "burn"]
+    ]
 };
-const alienSystemExample = () => {
-    Hooks.on("renderChatMessage", (message, html, data) => {
-        html.find("button.alien-Push-button").each((i, li) => {
-        // console.warn(li);
-            li.addEventListener("click", (ev) => {
-                const tarG = ev.target.previousElementSibling.checked;
 
-                if (ev.target.classList.contains("alien-Push-button")) {
-            // do stuff
-                    const actor = game.actors.get(message.data.speaker.actor);
-                    if (!actor) { return ui.notifications.warn(game.i18n.localize("ALIENRPG.NoToken")) }
-                    let reRoll = "push";
-
-                    if (tarG) {
-                        reRoll = "mPush";
-                    }
-                    let hostile = actor.data.type,
-                        blind = false,
-            //  Initialse the chat message
-                        chatMessage = "";
-
-                    if (actor.data.token.disposition === -1) {
-                        blind = true;
-                    }
-                    if (actor.data.type == "character") {
-                        actor.update({"data.header.stress.value": actor.data.data.header.stress.value + 1});
-                    } else { return }
-                    const reRoll1 = game.alienrpg.rollArr.r1Dice - game.alienrpg.rollArr.r1Six;
-                    const reRoll2 = game.alienrpg.rollArr.r2Dice + 1 - (game.alienrpg.rollArr.r2One + game.alienrpg.rollArr.r2Six);
-                    yze.yzeRoll(hostile, blind, reRoll, game.alienrpg.rollArr.tLabel, reRoll1, game.i18n.localize("ALIENRPG.Black"), reRoll2, game.i18n.localize("ALIENRPG.Yellow"), actor.id);
-                }
-            });
-        });
-    });
+const HTMLTEMPLATES = {
+    Wrapper: (combatantID) => "<div class=\"combatant-wrapper flexrow\"></div>",
+    ActionBox: (combatantID, {usedSlow, usedFast} = {}) => `<div class="combatant-action-box">${[
+        `<img class="alienrpgoverrides-button fast-action-toggle" ${usedFast ? "src=\"modules/alienrpgoverrides/assets/ui/fast-action-block.png\"" : ""} height="26px" width="20px" data-is-used="${usedFast ? 1 : 0}" data-combatant-id="${combatantID}">`,
+        `<img class="alienrpgoverrides-button slow-action-toggle" ${usedSlow ? "src=\"modules/alienrpgoverrides/assets/ui/slow-action-block.png\"" : ""} height="26px" width="20px" data-is-used="${usedSlow ? 1 : 0}" data-combatant-id="${combatantID}">`
+    ].join("")}</div>`,
+    CycleButton: (combatant, iconCategory) => {
+        const curState = combatant.getFlag("alienrpgoverrides", `cyclebutton.${iconCategory}`);
+        const curIndex = Math.max(0, ICONCLASSES[iconCategory].findIndex(([title]) => title === curState));
+        const [title, className, iconClass] = ICONCLASSES[iconCategory][curIndex];
+        return `
+        <a class="combatant-control cycle-button cycle-${iconCategory} ${className}" title="${iconCategory.toUpperCase()}: ${title}">
+            <i class="fas fa-${iconClass}"></i>
+        </a>`;
+    },
+    ToggleButton: (combatant, title, toggleClass, isToggledFunc, iconClass) => `
+        <a class="combatant-control toggle-button ${isToggledFunc(combatant) ? toggleClass : ""}" title="${title}">
+            <i class="fas fa-${iconClass}"></i>
+        </a>`,
+    SwitchInitiative: (combatantID, switchFlag) => `
+        <a class="combatant-control switch-initiative ${switchFlag === combatantID ? "switcher" : ""} ${switchFlag ? "switch-active" : ""}" title="Switch Initiative">
+            <i class="fas fa-people-arrows"></i>
+        </a>`
 };
-/* eslint-enable */
-
-/* const toggleAction = {
-    fast: (combatant, elem) => {
-        combatant.setFlag("alienrpgoverrides", "usedFast", elem.dataset.isUsed === "0");
-    }
-} (combatant, ) */
 
 export default (() => ({
     "~renderCombatTracker": (ctApp, ctHTML, ctData) => {
+        /*DEVCODE*/
         console.log("██████ OVERRIDING COMBAT TRACKER ... ██████");
         console.log(ctApp);
         console.log(ctHTML);
@@ -94,38 +59,102 @@ export default (() => ({
         // - Icons before name showing various flag effects
         //     - Panic actions (automatically added from combat tracker)
         //     - Prone / Grapple / On Fire / Aiming / Overwatching <-- These toggle off at a click
-        const HTMLTEMPLATES = {
-            Wrapper: (combatantID) => "<div class=\"combatant-wrapper flexrow\"></div>",
-            ActionBox: (usedSlow, usedFast, slowIcon, fastIcon, combatantID) => `<div class="combatant-action-box">${[
-                `<div class="alienrpgoverrides-button fast-action-toggle ${fastIcon ? `icon-${fastIcon}` : ""}" data-is-used="${usedFast ? 1 : 0}" data-combatant-id="${combatantID}"></div>`,
-                `<div class="alienrpgoverrides-button slow-action-toggle ${slowIcon ? `icon-${slowIcon}` : ""}" data-is-used="${usedSlow ? 1 : 0}" data-combatant-id="${combatantID}"></div>`
-            ].join("")}</div>`
-        };
+        //
+        //
+        // - CYCLE BUTTON: "STANCE"
+        //      - "Standing" --> Normal, Default Stance
+        //      - "Prone"
+        //      - "Grappled"
+        // - CYCLE BUTTON: "READY"
+        //      - "Reacting" --> Normal, Default Readiness
+        //      - "Aiming"
+        //      - "Overwatch"
+        //      - "Helping"
+
+        /*!DEVCODE*/
         ctData.combat.turns.forEach((combatant) => {
             ctHTML.find(`.combatant[data-combatant-id=${combatant.id}]`)
                 .wrap(HTMLTEMPLATES.Wrapper(combatant.id))
                 .before(HTMLTEMPLATES.ActionBox(
-                    combatant.getFlag("alienrpgoverrides", "usedSlow"),
-                    combatant.getFlag("alienrpgoverrides", "usedFast"),
-                    combatant.id
-                ));
-            ctHTML.find(`.alienrpgoverrides-button.fast-action-toggle[data-combatant-id=${combatant.id}]`)
-                .each(function toggleFastAction() {
-                    $(this).dblclick(({target}) => {
-                        combatant.setFlag("alienrpgoverrides", "usedFast", target.dataset.isUsed === "0");
-                    });
+                    combatant.id,
+                    {
+                        usedSlow: combatant.getFlag("alienrpgoverrides", "usedSlow"),
+                        usedFast: combatant.getFlag("alienrpgoverrides", "usedFast")
+                    }
+                ))
+                .find(".combatant-controls")
+                .prepend([
+                    HTMLTEMPLATES.CycleButton(
+                        combatant,
+                        "stance"
+                    ),
+                    HTMLTEMPLATES.CycleButton(
+                        combatant,
+                        "readying"
+                    ),
+                    HTMLTEMPLATES.CycleButton(
+                        combatant,
+                        "status"
+                    ),
+                    HTMLTEMPLATES.SwitchInitiative(
+                        combatant.id,
+                        ctData.combat.getFlag("alienrpgoverrides", "swapInitWith")
+                    )
+                ].join(""));
+            ctHTML.find(`.fast-action-toggle[data-combatant-id=${combatant.id}]`)
+                .click(({target: {dataset: {isUsed}}}) => { combatant.setFlag("alienrpgoverrides", "usedFast", isUsed === "0") });
+            ctHTML.find(`.slow-action-toggle[data-combatant-id=${combatant.id}]`)
+                .click(({target: {dataset: {isUsed}}}) => { combatant.setFlag("alienrpgoverrides", "usedSlow", isUsed === "0") });
+            ctHTML.find(`.combatant[data-combatant-id=${combatant.id}] .switch-initiative:not(.switcher)`)
+                .click(() => {
+                    const swapInitWith = ctData.combat.getFlag("alienrpgoverrides", "swapInitWith");
+                    if (swapInitWith) {
+                        const combatantA = ctData.combat.turns.find((cbt) => cbt.id === swapInitWith);
+                        const [initA, initB] = [
+                            combatantA.initiative,
+                            combatant.initiative
+                        ];
+                        ctData.combat.updateEmbeddedDocuments("Combatant", [
+                            {_id: combatant.id, initiative: initA},
+                            {_id: combatantA.id, initiative: initB}
+                        ]);
+                        ctData.combat.setFlag("alienrpgoverrides", "swapInitWith", null);
+                    } else {
+                        ctData.combat.setFlag("alienrpgoverrides", "swapInitWith", combatant.id);
+                    }
                 });
-            ctHTML.find(`.alienrpgoverrides-button.slow-action-toggle[data-combatant-id=${combatant.id}]`)
-                .each(function toggleSlowAction() {
-                    $(this).dblclick(({target}) => {
-                        combatant.setFlag("alienrpgoverrides", "usedSlow", target.dataset.isUsed === "0");
+            ctHTML.find(`.combatant[data-combatant-id=${combatant.id}] .switcher`)
+                .click(() => { ctData.combat.setFlag("alienrpgoverrides", "swapInitWith", null) });
+            for (const iconCategory of Object.keys(ICONCLASSES)) {
+                ctHTML.find(`.combatant[data-combatant-id=${combatant.id}] .cycle-${iconCategory}`)
+                    .click(() => {
+                        const curTitle = combatant.getFlag("alienrpgoverrides", `cyclebutton.${iconCategory}`);
+                        const curIndex = ICONCLASSES[iconCategory].findIndex(([title]) => title === curTitle);
+                        const [newTitle] = Cycle(ICONCLASSES[iconCategory], curIndex);
+                        combatant.setFlag("alienrpgoverrides", `cyclebutton.${iconCategory}`, newTitle);
                     });
-                });
+            }
         });
-
-        // Add listeners to rendered html for clicks and right clicks
-        // ... and eventually drag-drop for switching combatant initiative values
-        // ... or could just have a 'click button on first combatant' -> 'click button on second combatant' = SWITCH THEM
+        /*DEVCODE*/
         console.log("██████ COMBAT TRACKER OVERRIDING COMPLETE █████████");
+        /*!DEVCODE*/
+    },
+    "~updateCombat": (combat, ctData) => {
+        console.log("... Checking Update Combat ...");
+        console.log(combat);
+        console.log(ctData);
+        if (game.user.isGM) {
+            if (ctData.turn === 0 && RE.F.combats[combat.id] !== ctData.turn) {
+                console.log("*** *** *** UPDATING COMBAT! *** *** ***");
+                // Reset all flags on all combatants to default.
+                combat.updateEmbeddedDocuments("Combatant", combat.turns.map((turn) => ({
+                    "_id": turn.id,
+                    "flags.alienrpgoverrides.usedSlow": false,
+                    "flags.alienrpgoverrides.usedFast": false
+                })));
+                combat.setFlag("alienrpgoverrides", "swapInitWith", null);
+            }
+            RE.F.combats[combat.id] = ctData.turn;
+        }
     }
 }))();

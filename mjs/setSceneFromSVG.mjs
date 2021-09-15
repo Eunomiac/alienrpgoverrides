@@ -70,12 +70,18 @@
    █
    ███████████████████████████████████████████████████████████████████████████████████████████████████████████████████ */
 /* ██████████ REPLACE XML CODE BELOW WITH CODE COPIED FROM THE TEXT OF YOUR SVG FILE █████████████████████████████████ */
-const LIGHTOVERRIDES = {
+const getTintAlpha = (intensity) => intensity ** 2.2;
+const getIntensity = (tintAlpha) => tintAlpha ** (1 / 2.2);
+
+const LIGHTDEFAULTS = {
     percentBright: 0,
     percentDim: 1,
-    tintAlpha: 0.5,
+    intensity: 0.5,
+    get tintAlpha() { return getTintAlpha(this.intensity) },
+    set tintAlpha(tA) { this.intensity = getIntensity(tA) },
     angle: 360
 };
+
 const LIGHTCORRECTIONS = {
     // For some reason, direct pixel conversion of both radius and intensity must be scaled to result in matching values
     // in FoundryVTT.  These are the "correcting" multipliers that should result in your SVG shapes translating into
@@ -84,33 +90,36 @@ const LIGHTCORRECTIONS = {
     // If future updates change (or fix) this behavior, you may need to adjust these values.
     //
     // Because they are multipliers, to remove the correction entirely, set the value to '1' (not '0').
-    tintAlpha: 0.6,
+    tintAlpha: 1,
     radius: 1.79
 };
 const LIGHTCLASSES = {
     dimAmber: {
+        t: "g",
         percentBright: 0,
         percentDim: 1,
-        tintAlpha: 0.12,
+        intensity: 0.12,
         hidden: true
     },
     awakeAmber: {
+        t: "g",
         percentBright: 0,
         percentDim: 1,
-        tintAlpha: 0.4,
+        intensity: 0.4,
         hidden: true
     },
     coldSmoke: {
+        t: "g",
         lightAnimation: {
             type: "SecretFireSmoke Patch",
             speed: 10,
             intensity: 1
         },
-        tintAlpha: 0.6
+        intensity: 0.6
     },
     cryoSleep: {
         tintColor: "#ffbb00",
-        tintAlpha: 0.5,
+        intensity: 0.5,
         percentBright: 1,
         percentDim: 1,
         lightAnimation: {
@@ -121,7 +130,8 @@ const LIGHTCLASSES = {
     },
     muthurSleep: {
         tintColor: "#ffbb00",
-        tintAlpha: 0.5,
+        intensity: 0.5,
+        t: "g",
         percentBright: 1,
         percentDim: 1,
         lightAnimation: {
@@ -240,6 +250,7 @@ export default async (svgXML, isClearingExistingLights = false, isClearingExisti
                     "#00FFFF": {move: 1, sense: 0, sound: 0, door: 0}, // Cyan = Invisible Wall
                     "#00FF00": {move: 1, sense: 2, sound: 1, door: 0}, // Green = Terrain Wall
                     "#FF5522": {move: 0, sense: 1, sound: 1, door: 0}, // Orange = Ethereal Wall
+                    "#FF9911": {move: 0, sense: 1, sound: 0, door: 0}, // Light Orange = VisOnly Wall
                     "#223399": {move: 1, sense: 1, sound: 1, door: 1}, // Purple = Normal Door
                     "#FF00FF": {move: 1, sense: 1, sound: 1, door: 2}, // Magenta = Secret Door
                     "#774422": {move: 1, sense: 0, sound: 0, door: 2} // Brown = Invisible Door
@@ -281,6 +292,7 @@ export default async (svgXML, isClearingExistingLights = false, isClearingExisti
                 return false;
             }
         };
+        const getRadius = (radius) => (parseInt(radius) / canvas.scene.data.grid) * LIGHTCORRECTIONS.radius;
         const lightParseFunc = (xmlLine, classParams = {}) => {
             try {
                 classParams = {...classParams};
@@ -291,11 +303,13 @@ export default async (svgXML, isClearingExistingLights = false, isClearingExisti
                 const circLightData = {
                     x: parseInt(x),
                     y: parseInt(y),
-                    bright: (parseInt(radius) / canvas.scene.data.grid) * LIGHTCORRECTIONS.radius * (classParams.percentBright ?? LIGHTOVERRIDES.percentBright),
-                    dim: (parseInt(radius) / canvas.scene.data.grid) * LIGHTCORRECTIONS.radius * (classParams.percentDim ?? LIGHTOVERRIDES.percentDim)
+                    bright: getRadius(radius) * (classParams.percentBright ?? LIGHTDEFAULTS.percentBright),
+                    dim: getRadius(radius) * (classParams.percentDim ?? LIGHTDEFAULTS.percentDim),
+                    intensity: classParams.intensity ?? LIGHTDEFAULTS.intensity
                 };
                 delete classParams.percentBright;
                 delete classParams.percentDim;
+                delete classParams.intensity;
                 if (tintColor) {
                     circLightData.tintColor = tintColor;
                 }
@@ -311,7 +325,7 @@ export default async (svgXML, isClearingExistingLights = false, isClearingExisti
                     if (params) {
                         const parsedParams = Object.fromEntries(params.split(/-/).map((paramKeyVal) => paramKeyVal.split(/:/).map((kv) => (/^[0-9.]+$/.test(kv) ? parseFloat(kv) : kv))));
                         if ("class" in parsedParams) {
-                            const classData = {...LIGHTCLASSES[parsedParams.class]};
+                            const classData = {...(LIGHTCLASSES[parsedParams.class] || {})};
                             delete parsedParams.class;
                             Object.assign(parsedParams, classData);
                         }
@@ -319,8 +333,10 @@ export default async (svgXML, isClearingExistingLights = false, isClearingExisti
                     }
                 }
                 circLightData.angle = circLightData.angle ?? 360;
-                circLightData.tintAlpha = (circLightData.tintAlpha ?? LIGHTOVERRIDES.tintAlpha) * LIGHTCORRECTIONS.tintAlpha;
-
+                circLightData.tintAlpha = "intensity" in circLightData
+                    ? getTintAlpha(circLightData.intensity)
+                    : (circLightData.tintAlpha ?? LIGHTDEFAULTS.tintAlpha) * LIGHTCORRECTIONS.tintAlpha;
+                delete circLightData.intensity;
                 // Push light creation data to circLights
                 circLights.push(circLightData);
 
