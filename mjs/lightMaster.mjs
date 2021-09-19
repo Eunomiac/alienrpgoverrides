@@ -101,12 +101,12 @@ export default (() => ({
   }
 }))();
 
-
+/*
 let multBRIGHT = 0,
     multDIM = 1.5;
 
 canvas.scene.updateEmbeddedDocuments("AmbientLight", Array.from(canvas.scene.getEmbeddedCollection("AmbientLight")
-  /* .filter((light) => new RegExp("SHIPLIGHTS-AWAKE", "ui").test(light.getFlag("alienrpgoverrides", "group"))) */
+  // .filter((light) => new RegExp("SHIPLIGHTS-AWAKE", "ui").test(light.getFlag("alienrpgoverrides", "group")))
   .map((groupLight) => {
     const radius = groupLight.getFlag("alienrpgoverrides", "radius") ?? Math.max(groupLight.data.bright, groupLight.data.dim);
     const bright = radius * multBRIGHT;
