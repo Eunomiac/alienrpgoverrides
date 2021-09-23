@@ -5,12 +5,22 @@ const parseLightAdjustmentData = (light, upData) => {
   if (light) {
     for (const [key, val] of Object.entries({...upData})) {
       if (/%$/.test(key)) {
-        const realKey = key.slice(0, -1);
-        const curValue = light.data[realKey];
-        const newValue = curValue * val;
-        updateData[realKey] = newValue;
-        delete updateData[key];
+        if (key === "intensity%") {
+          const curIntensity = light.data.tintAlpha ** (1 / 2.2);
+          updateData.intensity = curIntensity * val;
+          delete updateData["intensity%"];
+        } else {
+          const realKey = key.slice(0, -1);
+          const curValue = light.data[realKey];
+          const newValue = curValue * val;
+          updateData[realKey] = newValue;
+          delete updateData[key];
+        }
       }
+    }
+    if ("intensity" in updateData) {
+      updateData.tintAlpha = Math.max(0, Math.min(1, updateData.intensity ** 2.2));
+      delete updateData.intensity;
     }
   }
   return updateData;

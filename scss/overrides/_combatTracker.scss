@@ -8,12 +8,13 @@
             display: block;
             height: 50%;
 
-            img { pointer-events: none; }
+            &.opacity-zero { opacity: 0 }
         }
     }
 
     .combatant.directory-item {
         .combatant-control {
+            
             &.switch-initiative {
                 // color: var(--aliengreen);
                 // order: 10;
@@ -24,9 +25,12 @@
 
             &.cycle-button {
                 order: 9;
+                color: #00FF00;
+
+                &.none { opacity: 0.5; }
 
                 &.prone {
-                    i { transform: rotate(90deg); }
+                    i { transform: rotate(90deg) scale(1.2); }
                 }
             }
         }
