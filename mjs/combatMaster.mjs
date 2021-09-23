@@ -2,44 +2,48 @@ import {RE, Cycle} from "./utils.mjs";
 
 const ICONCLASSES = {
   stance: [
-    ["Ready", "none", "fas fa-street-view"],
+    ["None", "none", "fas fa-street-view"],
     ["Prone", "prone", "fas fa-running"],
-    ["Grappling", "grappling", "fas fa-hands-helping"]
+    ["Grappling", "grappling", "fas fa-random"]
   ],
   readying: [
     ["None", "none", "far fa-circle"],
     ["Aiming", "aiming", "fas fa-crosshairs"],
     ["Overwatch", "overwatch", "far fa-eye"],
+    ["Panic", "panic", "fas fa-flushed"],
     ["Helping", "helping", "fas fa-people-carry"]
   ],
-  status: [
-    ["All Good!", "none", "far fa-circle"],
-    ["Panicked!", "panicked", "fas fa-surprise"],
-    ["On Fire!", "on-fire", "fas fa-burn"]
+  cover: [
+    ["None", "none", "fas fa-shield-alt"],
+    ["Light (2-3)", "light", "fas fa-shield-alt"],
+    ["Full (4-5)", "full", "fas fa-shield-alt"],
+    ["Armored (6-7)", "armored", "fas fa-shield-alt"]
   ]
 };
 
 const HTMLTEMPLATES = {
   Wrapper: (combatantID) => "<div class=\"combatant-wrapper flexrow\"></div>",
   ActionBox: (combatantID, {usedSlow, usedFast} = {}) => `<div class="combatant-action-box">${[
-    `<img class="alienrpgoverrides-button fast-action-toggle ${usedFast ? "" : "opacity-zero"}" src="modules/alienrpgoverrides/assets/ui/fast-action-block.png" height="26px" width="20px" data-is-used="${usedFast ? 1 : 0}" data-combatant-id="${combatantID}">`,
-    `<img class="alienrpgoverrides-button slow-action-toggle ${usedSlow ? "" : "opacity-zero"}" src="modules/alienrpgoverrides/assets/ui/slow-action-block.png" height="26px" width="20px" data-is-used="${usedSlow ? 1 : 0}" data-combatant-id="${combatantID}">`
+    `<img class="alienrpgoverrides-button fast-action-toggle" src="modules/alienrpgoverrides/assets/ui/fast-action-${usedFast ? "block" : "available"}.png" height="26px" width="20px" data-is-used="${usedFast ? 1 : 0}" data-combatant-id="${combatantID}">`,
+    `<img class="alienrpgoverrides-button slow-action-toggle" src="modules/alienrpgoverrides/assets/ui/slow-action-${usedSlow ? "block" : "available"}.png" height="26px" width="20px" data-is-used="${usedSlow ? 1 : 0}" data-combatant-id="${combatantID}">`
   ].join("")}</div>`,
   CycleButton: (combatant, iconCategory) => {
-    const curState = combatant.getFlag("alienrpgoverrides", `cyclebutton.${iconCategory}`) ?? ICONCLASSES[iconCategory][0][0];
-    const curIndex = Math.max(0, ICONCLASSES[iconCategory].findIndex(([title]) => title === curState));
+    const curState = combatant.getFlag("alienrpgoverrides", `cyclebutton.${iconCategory}`);
+    const curIndex = curState
+      ? Math.max(0, ICONCLASSES[iconCategory].findIndex(([title]) => title === curState))
+      : 0;
     const [title, className, iconClass] = ICONCLASSES[iconCategory][curIndex];
     return `
-        <a class="combatant-control cycle-button cycle-${iconCategory} ${className}" title="${iconCategory.toUpperCase()}: ${title}">
-            <i class="fas fa-${iconClass}"></i>
+        <a class="combatant-control alienrpgoverrides-button cycle-button cycle-${iconCategory} ${className}" title="${iconCategory.toUpperCase()}: ${title}">
+            <i class="${iconClass}"></i>
         </a>`;
   },
   ToggleButton: (combatant, title, toggleClass, isToggledFunc, iconClass) => `
-        <a class="combatant-control toggle-button ${isToggledFunc(combatant) ? toggleClass : ""}" title="${title}">
-            <i class="fas fa-${iconClass}"></i>
+        <a class="combatant-control alienrpgoverrides-button toggle-button ${isToggledFunc(combatant) ? toggleClass : ""}" title="${title}">
+            <i class="${iconClass}"></i>
         </a>`,
   SwitchInitiative: (combatantID, switchFlag) => `
-        <a class="combatant-control switch-initiative ${switchFlag === combatantID ? "switcher" : ""} ${switchFlag ? "switch-active" : ""}" title="Switch Initiative">
+        <a class="combatant-control alienrpgoverrides-button switch-initiative ${switchFlag === combatantID ? "switcher" : ""} ${switchFlag ? "switch-active" : ""}" title="Switch Initiative">
             <i class="fas fa-people-arrows"></i>
         </a>`
 };
@@ -95,7 +99,7 @@ export default (() => ({
             ),
             HTMLTEMPLATES.CycleButton(
               combatant,
-              "status"
+              "cover"
             ),
             HTMLTEMPLATES.SwitchInitiative(
               combatant.id,
@@ -129,8 +133,11 @@ export default (() => ({
         for (const iconCategory of Object.keys(ICONCLASSES)) {
           ctHTML.find(`.combatant[data-combatant-id=${combatant.id}] .cycle-${iconCategory}`)
             .click(() => {
-              const curTitle = combatant.getFlag("alienrpgoverrides", `cyclebutton.${iconCategory}`);
-              const curIndex = ICONCLASSES[iconCategory].findIndex(([title]) => title === curTitle);
+              const curState = combatant.getFlag("alienrpgoverrides", `cyclebutton.${iconCategory}`);
+              const curIndex = curState
+                ? Math.max(0, ICONCLASSES[iconCategory].findIndex(([title]) => title === curState))
+                : 0;
+              const [title, className, iconClass] = ICONCLASSES[iconCategory][curIndex];
               const [newTitle] = Cycle(ICONCLASSES[iconCategory], curIndex);
               combatant.setFlag("alienrpgoverrides", `cyclebutton.${iconCategory}`, newTitle);
             });

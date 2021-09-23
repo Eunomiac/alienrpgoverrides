@@ -602,7 +602,7 @@
 .vtt.game.system-alienrpg #combat-tracker .combatant-action-box {
   position: relative;
   max-width: 20px;
-  margin-right: -10px;
+  margin-right: -20px;
 }
 
 .vtt.game.system-alienrpg #combat-tracker .combatant-action-box .alienrpgoverrides-button {
@@ -614,27 +614,145 @@
   opacity: 0;
 }
 
-.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .combatant-control.switch-initiative.switch-active {
-  color: #FFDD00;
-}
-
-.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .combatant-control.switch-initiative.switch-active.switcher {
-  color: var(--aliengreen);
-}
-
-.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .combatant-control.cycle-button {
-  -webkit-box-ordinal-group: 10;
-  -ms-flex-order: 9;
-  order: 9;
-  color: #00FF00;
-}
-
-.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .combatant-control.cycle-button.none {
+.vtt.game.system-alienrpg #combat-tracker .combatant-action-box .alienrpgoverrides-button.opacity-zero:hover {
   opacity: 0.5;
 }
 
-.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .combatant-control.cycle-button.prone i {
-  -webkit-transform: rotate(90deg) scale(1.2);
-  -ms-transform: rotate(90deg) scale(1.2);
-  transform: rotate(90deg) scale(1.2);
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item img.token-image {
+  margin-left: 10px;
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button {
+  display: inline-block;
+  -webkit-box-flex: 0;
+  -ms-flex: 0;
+  flex: 0;
+  width: 25px;
+  min-width: 25px;
+  max-width: 25px;
+  padding: 0 5px;
+  text-align: center;
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.switch-initiative {
+  margin-left: 20px;
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.switch-initiative.switch-active {
+  color: #FFDD00;
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.switch-initiative.switch-active.switcher {
+  color: var(--aliengreen);
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button {
+  --shadowBlur: 3px;
+  color: var(--iconColor);
+  text-shadow: 0 0 var(--shadowBlur) var(--shadowColor), 0 0 var(--shadowBlur) var(--shadowColor), 0 0 var(--shadowBlur) var(--shadowColor), 0 0 var(--shadowBlur) var(--shadowColor);
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button i {
+  -webkit-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  transform: scale(1.2);
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.none {
+  --iconColor: #001700;
+  --shadowBlur: 2px;
+  --shadowColor: var(--aliendarkergreen);
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.none:hover, .vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button:hover {
+  --shadowBlur: 5px;
+  color: var(--shadowColor);
+  text-shadow: 0 0 var(--shadowBlur) var(--iconColor), 0 0 var(--shadowBlur) var(--iconColor), 0 0 var(--shadowBlur) var(--iconColor), 0 0 var(--shadowBlur) var(--iconColor);
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.cycle-stance:not(.none) {
+  --iconColor: #FFFF00;
+  --shadowColor: #FF9900;
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.cycle-stance:not(.none).prone {
+  -webkit-transform: rotate(240deg) scale(0.8, 1.3) translateX(-3px);
+  -ms-transform: rotate(240deg) scale(0.8, 1.3) translateX(-3px);
+  transform: rotate(240deg) scale(0.8, 1.3) translateX(-3px);
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.cycle-stance:not(.none).grappling {
+  -webkit-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.cycle-readying:not(.none).aiming {
+  --iconColor: #00FF00;
+  --shadowColor: #009900;
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.cycle-readying:not(.none).panic {
+  --iconColor: #666666;
+  --shadowColor: #FFFFFF;
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.cycle-readying:not(.none).panic i {
+  -webkit-transform: scale(1.4);
+  -ms-transform: scale(1.4);
+  transform: scale(1.4);
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.cycle-readying:not(.none).overwatch {
+  --iconColor: #00FF00;
+  --shadowColor: #009900;
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.cycle-readying:not(.none).helping {
+  --iconColor: #00FFFF;
+  --shadowColor: #0099FF;
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.cycle-cover.none {
+  --iconColor: #001700;
+  --shadowColor: var(--aliendarkergreen);
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.cycle-cover.none i {
+  -webkit-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  transform: scale(0.8);
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.cycle-cover.light {
+  --iconColor: #FFFF00;
+  --shadowColor: #FF9900;
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.cycle-cover.light i {
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.cycle-cover.full {
+  --iconColor: #00FF00;
+  --shadowColor: #009900;
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.cycle-cover.full i {
+  -webkit-transform: scale(1.3);
+  -ms-transform: scale(1.3);
+  transform: scale(1.3);
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.cycle-cover.armored {
+  --iconColor: #00FFFF;
+  --shadowColor: #0099FF;
+}
+
+.vtt.game.system-alienrpg #combat-tracker .combatant.directory-item .alienrpgoverrides-button.cycle-button.cycle-cover.armored i {
+  -webkit-transform: scale(1.6);
+  -ms-transform: scale(1.6);
+  transform: scale(1.6);
 }

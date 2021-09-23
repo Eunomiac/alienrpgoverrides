@@ -2,20 +2,36 @@
     .combatant-action-box {
         position: relative;
         max-width: 20px;
-        margin-right: -10px;
+        margin-right: -20px;
 
         .alienrpgoverrides-button {
             display: block;
             height: 50%;
 
-            &.opacity-zero { opacity: 0 }
+            &.opacity-zero {
+                opacity: 0;
+
+                &:hover {
+                    opacity: 0.5;
+                }
+            }
         }
     }
 
     .combatant.directory-item {
-        .combatant-control {
-            
+        img.token-image { margin-left: 10px; }
+
+        .alienrpgoverrides-button {
+            display: inline-block;
+            flex: 0;
+            width: 25px;
+            min-width: 25px;
+            max-width: 25px;
+            padding: 0 5px;
+            text-align: center;
+
             &.switch-initiative {
+                margin-left: 20px;
                 // color: var(--aliengreen);
                 // order: 10;
 
@@ -24,13 +40,92 @@
             }
 
             &.cycle-button {
-                order: 9;
-                color: #00FF00;
+                // color: #00FF00;
+                // order: 9;
+                // text-align: center;
+                // --iconColor: #001700;
+                // --shadowBlur: 3px;
+                // --shadowColor: var(--aliendarkergreen);
+                --shadowBlur: 3px;
 
-                &.none { opacity: 0.5; }
+                color: var(--iconColor);
+                text-shadow: 0 0 var(--shadowBlur) var(--shadowColor), 0 0 var(--shadowBlur) var(--shadowColor), 0 0 var(--shadowBlur) var(--shadowColor), 0 0 var(--shadowBlur) var(--shadowColor);
 
-                &.prone {
-                    i { transform: rotate(90deg) scale(1.2); }
+                i { transform: scale(1.2); }
+
+                &.none {
+                    --iconColor: #001700;
+                    --shadowBlur: 2px;
+                    --shadowColor: var(--aliendarkergreen);
+                }
+
+                &.none:hover,
+                &:hover {
+                    --shadowBlur: 5px;
+
+                    color: var(--shadowColor);
+                    text-shadow: 0 0 var(--shadowBlur) var(--iconColor), 0 0 var(--shadowBlur) var(--iconColor), 0 0 var(--shadowBlur) var(--iconColor), 0 0 var(--shadowBlur) var(--iconColor);
+                }
+
+                &.cycle-stance:not(.none) {
+                    --iconColor: #FFFF00;
+                    --shadowColor: #FF9900;
+
+                    &.prone { transform: rotate(240deg) scale(0.8, 1.3) translateX(-3px); }
+                    &.grappling { transform: rotate(90deg); }
+                }
+
+                &.cycle-readying:not(.none) {
+                    &.aiming {
+                        --iconColor: #00FF00;
+                        --shadowColor: #009900;
+                    }
+
+                    &.panic {
+                        --iconColor: #666666;
+                        --shadowColor: #FFFFFF;
+                        i { transform: scale(1.4); }
+                    }
+
+                    &.overwatch {
+                        --iconColor: #00FF00;
+                        --shadowColor: #009900;
+                    }
+
+                    &.helping {
+                        --iconColor: #00FFFF;
+                        --shadowColor: #0099FF;
+                    }
+                }
+
+                &.cycle-cover {
+                    &.none {
+                        --iconColor: #001700;
+                        --shadowColor: var(--aliendarkergreen);
+
+                        i { transform: scale(0.8); }
+                    }
+
+                    &.light {
+                        --iconColor: #FFFF00;
+                        --shadowColor: #FF9900;
+
+                        i { transform: scale(1); }
+                    }
+
+                    &.full {
+                        --iconColor: #00FF00;
+                        --shadowColor: #009900;
+
+                        i { transform: scale(1.3); }
+                    }
+
+                    &.armored {
+                        --iconColor: #00FFFF;
+                        --shadowColor: #0099FF;
+
+                        i { transform: scale(1.6); }
+                    }
                 }
             }
         }
