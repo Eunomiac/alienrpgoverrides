@@ -26,37 +26,52 @@ const parseLightAdjustmentData = (light, upData) => {
   return updateData;
 };
 
-const parseLightUpdateData = (groupRef, upData) => {
+const parseLightUpdateData = (groupRef, upData, scene) => {
+  scene = scene ?? canvas.scene;
   const updateData = [];
   if (typeof groupRef === "object") {
     for (const [gRef, uData] of Object.entries(groupRef)) {
-      updateData.push(...parseLightUpdateData(gRef, uData));
+      updateData.push(...parseLightUpdateData(gRef, uData, scene));
     }
   } else {
     const regExpTest = new RegExp(groupRef, "ui");
-    updateData.push(...canvas.scene.lights.filter((light) => regExpTest.test(light.data.flags?.alienrpgoverrides?.group))
+    updateData.push(...scene.lights.filter((light) => regExpTest.test(light.data.flags?.alienrpgoverrides?.group))
       .map((light) => ({_id: light.id, ...parseLightAdjustmentData(light, upData)})));
   }
   return updateData;
 };
 
-const parseSoundUpdateData = (soundName, upData) => {
+const parseSoundUpdateData = (soundName, upData, scene) => {
+  scene = scene ?? canvas.scene;
   const updateData = [];
   if (typeof soundName === "object") {
     for (const [sName, uData] of Object.entries(soundName)) {
-      updateData.push(...parseSoundUpdateData(sName, uData));
+      updateData.push(...parseSoundUpdateData(sName, uData, scene));
     }
   } else {
     const regExpTest = new RegExp(soundName, "ui");
-    updateData.push(...canvas.scene.sounds.filter((sound) => regExpTest.test(sound.data.path))
+    updateData.push(...scene.sounds.filter((sound) => regExpTest.test(sound.data.path))
       .map((sound) => ({_id: sound.id, ...upData})));
   }
   return updateData;
 };
 
+export const setLights = async (groupRef, updateData, scene) => {
+  scene = scene ?? canvas.scene;
+  await scene.updateEmbeddedDocuments("AmbientLight", parseLightUpdateData(groupRef, updateData, scene));
+  return true;
+};
+
+export const setSounds = async (soundName, updateData, scene) => {
+  scene = scene ?? canvas.scene;
+  await scene.updateEmbeddedDocuments("AmbientSound", parseSoundUpdateData(soundName, updateData, scene));
+  return true;
+};
+
 export default (() => ({
-  toggleLights: async (groupRef, isActive) => {
+  toggleLights: async (groupRef, isActive, scene) => {
     if (game.user.isGM) {
+      scene = scene ?? canvas.scene;
       const updateData = [];
       if (typeof groupRef === "object") {
         for (const [gRef, iActive] of Object.entries(groupRef)) {
@@ -66,7 +81,7 @@ export default (() => ({
       } else {
         updateData.push(...parseLightUpdateData(groupRef, {hidden: !isActive}));
       }
-      return canvas.scene.updateEmbeddedDocuments("AmbientLight", updateData);
+      return scene.updateEmbeddedDocuments("AmbientLight", updateData);
     }
     return false;
   },
@@ -79,24 +94,23 @@ export default (() => ({
       return false;
     });
   },
-  setLights: async (groupRef, updateData) => {
+  setLights: (groupRef, updateData, scene) => {
     if (game.user.isGM) {
-      return canvas.scene.updateEmbeddedDocuments("AmbientLight", parseLightUpdateData(groupRef, updateData));
+      setLights(groupRef, updateData, scene);
     }
-    return false;
   },
-  setSounds: async (soundName, updateData) => {
+  setSounds: (soundName, updateData, scene) => {
     if (game.user.isGM) {
-      return canvas.scene.updateEmbeddedDocuments("AmbientSound", parseSoundUpdateData(soundName, updateData));
+      setSounds(soundName, updateData, scene);
     }
-    return false;
   },
-  scaleLightGroup: async (groupRef, {bright, dim, intensity, radius}) => {
+  scaleLightGroup: async (groupRef, {bright, dim, intensity, radius}, scene) => {
     if (game.user.isGM) {
-      return canvas.scene.updateEmbeddedDocuments(
+      scene = scene ?? canvas.scene;
+      return scene.updateEmbeddedDocuments(
         "AmbientLight",
         parseLightUpdateData(groupRef,
-                             canvas.scene.getEmbeddedCollection("AmbientLight")
+                             scene.getEmbeddedCollection("AmbientLight")
                                .filter((light) => new RegExp(groupRef, "ui").test(light.getFlag("alienrpgoverrides", "group")))
                                .map((groupLight) => ({
                                  _id: groupLight.id,

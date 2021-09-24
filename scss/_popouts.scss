@@ -56,4 +56,31 @@
         height: 613px !important;
         outline: 5px solid #FF0000;
     }
+
+    &.increase-stress {
+        @keyframes fade-in {
+            0% { opacity: 0; }
+            35% { opacity: 1; }
+            40% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        
+        top: calc(50% - (300px / 2)) !important;
+        left: calc(50% - (900px / 2)) !important;
+        width: 900px !important;
+        height: 300px !important;
+        background: transparent;
+        line-height: 300px;
+        font-size: 200px;
+        font-family: 'Blinker', sans-serif;
+        text-transform: uppercase;
+        opacity: 0;
+        animation-name: fade-in;
+        animation-duration: 5s;
+        pointer-events: none;
+
+        .window-content {
+            color: #FF0000;
+        }
+    }
 }

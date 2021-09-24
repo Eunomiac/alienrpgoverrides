@@ -105,6 +105,7 @@
 
 .vtt.game.system-alienrpg .chat-message .message-content .crit-block,
 .vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block,
+.vtt.game.system-alienrpg .chat-message .message-content .xeno-crit-block,
 .vtt.game.system-alienrpg .chat-message .message-content .xeno-attack-block {
   display: block;
   width: 100%;
@@ -114,6 +115,8 @@
 .vtt.game.system-alienrpg .chat-message .message-content .crit-block .xeno-attack-name,
 .vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block .crit-name,
 .vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block .xeno-attack-name,
+.vtt.game.system-alienrpg .chat-message .message-content .xeno-crit-block .crit-name,
+.vtt.game.system-alienrpg .chat-message .message-content .xeno-crit-block .xeno-attack-name,
 .vtt.game.system-alienrpg .chat-message .message-content .xeno-attack-block .crit-name,
 .vtt.game.system-alienrpg .chat-message .message-content .xeno-attack-block .xeno-attack-name {
   display: block;
@@ -126,18 +129,21 @@
 
 .vtt.game.system-alienrpg .chat-message .message-content .crit-block .crit-heal-time,
 .vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block .crit-heal-time,
+.vtt.game.system-alienrpg .chat-message .message-content .xeno-crit-block .crit-heal-time,
 .vtt.game.system-alienrpg .chat-message .message-content .xeno-attack-block .crit-heal-time {
   color: #00FFFF;
 }
 
 .vtt.game.system-alienrpg .chat-message .message-content .crit-block .crit-permanent,
 .vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block .crit-permanent,
+.vtt.game.system-alienrpg .chat-message .message-content .xeno-crit-block .crit-permanent,
 .vtt.game.system-alienrpg .chat-message .message-content .xeno-attack-block .crit-permanent {
   color: #FF0000;
 }
 
 .vtt.game.system-alienrpg .chat-message .message-content .crit-block .crit-fatal-banner,
 .vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block .crit-fatal-banner,
+.vtt.game.system-alienrpg .chat-message .message-content .xeno-crit-block .crit-fatal-banner,
 .vtt.game.system-alienrpg .chat-message .message-content .xeno-attack-block .crit-fatal-banner {
   display: block;
   width: 100%;
@@ -153,6 +159,7 @@
 
 .vtt.game.system-alienrpg .chat-message .message-content .crit-block .crit-hard-treatment,
 .vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block .crit-hard-treatment,
+.vtt.game.system-alienrpg .chat-message .message-content .xeno-crit-block .crit-hard-treatment,
 .vtt.game.system-alienrpg .chat-message .message-content .xeno-attack-block .crit-hard-treatment {
   margin-top: -5px;
   font-size: 1.25em;
@@ -167,6 +174,7 @@
 
 .vtt.game.system-alienrpg .chat-message .message-content .crit-block .crit-hard-treatment span,
 .vtt.game.system-alienrpg .chat-message .message-content .synth-crit-block .crit-hard-treatment span,
+.vtt.game.system-alienrpg .chat-message .message-content .xeno-crit-block .crit-hard-treatment span,
 .vtt.game.system-alienrpg .chat-message .message-content .xeno-attack-block .crit-hard-treatment span {
   font-size: 1.5em;
   -webkit-transform: scaleX(0.2);
@@ -244,6 +252,58 @@
   width: 960px !important;
   height: 613px !important;
   outline: 5px solid #FF0000;
+}
+
+.vtt.game.system-alienrpg .app.window-app.masked-popout.increase-stress {
+  top: calc(50% - (300px / 2)) !important;
+  left: calc(50% - (900px / 2)) !important;
+  width: 900px !important;
+  height: 300px !important;
+  background: transparent;
+  line-height: 300px;
+  font-size: 200px;
+  font-family: 'Blinker', sans-serif;
+  text-transform: uppercase;
+  opacity: 0;
+  -webkit-animation-name: fade-in;
+  animation-name: fade-in;
+  -webkit-animation-duration: 5s;
+  animation-duration: 5s;
+  pointer-events: none;
+}
+
+@-webkit-keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.vtt.game.system-alienrpg .app.window-app.masked-popout.increase-stress .window-content {
+  color: #FF0000;
 }
 
 .vtt.game.system-alienrpg .app.window-app.sheet {
